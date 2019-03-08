@@ -1,4 +1,4 @@
-# Online Job Marketplaces Crawler
+# Online Job Marketplaces Scraper
 
 
 ## Requirements
