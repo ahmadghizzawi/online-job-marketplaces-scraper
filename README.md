@@ -4,6 +4,9 @@ for research purposes. The way scraping is conducted is similar across all platf
 list of users. For example, in TaskRabbit's case that would be a combination of a location and service
 type, i.e. _Home Cleaners in New York_.
 
+## IMPORTANT NOTE
+The scripts are not fully stable. 
+
 ## Requirements
 - Python 3.x: https://www.anaconda.com/distribution/ 
 - ChromeDriver v < 73: https://chromedriver.storage.googleapis.com/index.html?path=2.46/
@@ -15,7 +18,7 @@ to point to driver you downloaded.
 `pip install -r requirements.txt`
 
 ## TaskRabbit
-The TaskRabbit scraper was written in November 2018. Therefore, you might have to do minor changes before scraping
+The TaskRabbit scraper was written in November 2018. Therefore, you might have to do some changes before scraping
 depending on how severe the changes are. 
 
 # Author
