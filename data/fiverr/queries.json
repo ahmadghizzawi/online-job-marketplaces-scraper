@@ -1,0 +1,42 @@
+[
+  {
+    "category": "Graphics and design",
+    "subcategory": "T-Shirts",
+    "url": "https://www.fiverr.com/categories/graphics-design/creative-logo-design"
+  },
+  {
+    "category": "Digital marketing",
+    "subcategory": "Web Analytics",
+    "url": "https://www.fiverr.com/categories/online-marketing/web-analytics-services"
+  },
+  {
+    "category": "Writing and translation",
+    "subcategory": "Translation",
+    "url": "https://www.fiverr.com/categories/writing-translation/quality-translation-services"
+  },
+  {
+    "category": "Video and animation",
+    "subcategory": "Animated characters and modeling",
+    "url": "https://www.fiverr.com/categories/video-animation/animated-characters-modeling"
+  },
+  {
+    "category": "Music and audio",
+    "subcategory": "Singers and songwriters",
+    "url": "https://www.fiverr.com/categories/music-audio/singers-songwriters"
+  },
+  {
+    "category": "Programming and tech",
+    "subcategory": "Databases",
+    "url": "https://www.fiverr.com/categories/programming-tech/database-programming-services"
+  },
+  {
+    "category": "Business",
+    "subcategory": "Financial consulting",
+    "url": "https://www.fiverr.com/categories/business/financial-consulting-services"
+  },
+  {
+    "category": "Fun and Lifestyle",
+    "subcategory": "Health, Nutrition & Fitness",
+    "url": "https://www.fiverr.com/categories/lifestyle/health-fitness-tips"
+  }
+]
