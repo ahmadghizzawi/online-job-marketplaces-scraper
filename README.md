@@ -5,15 +5,18 @@ list of users. For example, in TaskRabbit's case that would be a combination of 
 type, i.e. _Home Cleaners in New York_.
 
 ## Requirements
-Python 3.7
+- Python 3.x: https://www.anaconda.com/distribution/ 
+- ChromeDriver v < 73: https://chromedriver.storage.googleapis.com/index.html?path=2.46/
 
+After downloading the ChromeDriver, make sure that you update src/taskrabbit/scrapers/services_by_city.py
+to point to driver you downloaded.
+
+### Dependencies
 `pip install -r requirements.txt`
 
 ## TaskRabbit
-
-
-## Fiverr
-
+The TaskRabbit scraper was written in November 2018. Therefore, you might have to do minor changes before scraping
+depending on how severe the changes are. 
 
 # Author
 Ahmad Ghizzawi (ahg05@mail.aub.edu)

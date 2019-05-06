@@ -8,7 +8,7 @@ from slugify import slugify
 
 
 def crawl_site(url, city, task):
-    browser = webdriver.Chrome("C:/Users/ahg05/Desktop/chromedriver.exe")
+    browser = webdriver.Chrome("/Users/ahmadghizzawi/Documents/Projects/online-job-marketplaces-scraper/chromedriver")
 
     # Load webpage
     browser.get(url)
@@ -191,24 +191,28 @@ def crawl_site(url, city, task):
     browser.close()
 
 
-with open('queries.json') as f:
-    entries = json.load(f)
-counter = 1
-failed = []
-for entry in entries:
-    print('Crawling query #', counter, 'out of', len(entries))
-    try:
-        if entry['city'].endswith('UK'):
-            website = 'https://www.spider.co.uk'
-        elif entry['city'] in ['Toronto, CA', 'Vancouver, CA']:
-            website = 'https://www.spider.ca'
-        else:
-            website = 'https://www.spider.com'
-        crawl_site(website + entry['url'], entry['city'], entry['task_title'])
-    except:
-        print('query #', counter, 'failed.')
-        failed.append(entry)
-    counter += 1
-    time.sleep(5)
-with open('failed_queries.json', 'w') as f:
-    json.dump(failed, f)
+def main():
+    with open('queries.json') as f:
+        entries = json.load(f)
+    counter = 1
+    failed = []
+    for entry in entries:
+        print('Crawling query #', counter, 'out of', len(entries))
+        try:
+            if entry['city'].endswith('UK'):
+                website = 'https://www.taskrabbit.co.uk'
+            elif entry['city'] in ['Toronto, CA', 'Vancouver, CA']:
+                website = 'https://www.taskrabbit.ca'
+            else:
+                website = 'https://www.taskrabbit.com'
+            crawl_site(website + entry['url'], entry['city'], entry['task_title'])
+        except Exception as error:
+            print('query #', counter, 'failed.')
+            print('Error:', error)
+            failed.append(entry)
+        counter += 1
+        time.sleep(5)
+        with open('failed_queries.json', 'w') as f:
+            json.dump(failed, f)
+
+main()

@@ -12,7 +12,7 @@ class ServicesSpider (scrapy.Spider):
     name = "services"
 
     start_urls = [
-        'https://www.spider.co.uk/m/all-services'
+        'https://www.taskrabbit.co.uk/m/all-services'
     ]
 
     def parse(self, response):

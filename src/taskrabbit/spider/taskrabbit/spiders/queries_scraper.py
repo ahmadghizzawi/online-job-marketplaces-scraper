@@ -15,7 +15,7 @@ class QueriesSpider(scrapy.Spider):
         with open('cities.json') as f:
             cities = json.load(f)
 
-        main_url = 'https://www.spider.com'
+        main_url = 'https://www.taskrabbit.com'
         start_urls = []
 
         for entry in cities:

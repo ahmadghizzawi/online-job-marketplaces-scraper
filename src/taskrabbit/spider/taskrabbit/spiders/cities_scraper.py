@@ -5,7 +5,7 @@ from taskrabbit.items import TaskRabbitCity
 class CitiesSpider(scrapy.Spider):
     name = "cities"
     start_urls = [
-        'https://www.spider.com/',
+        'https://www.taskrabbit.com/',
     ]
 
     def parse(self, response):
