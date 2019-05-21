@@ -154,13 +154,13 @@ def crawl_site(url, city, task):
         try:
             worker_dict['right_person'] = browser.find_elements_by_css_selector('.tasker--bio-responses')[0].text
         except:
-            worker_dict['right_person'] = ('no right person')
+            print('no right person')
 
         # retrieve the second free text
         try:
             worker_dict['when_tasking'] = browser.find_elements_by_css_selector('.tasker--bio-responses')[1].text
         except:
-            worker_dict['when_tasking'] =('no when tasking')
+            print('no when tasking')
 
         # retrieve number of reviews
         reviews_dropdown = browser.find_elements_by_css_selector('.reviews__filter--select option')
