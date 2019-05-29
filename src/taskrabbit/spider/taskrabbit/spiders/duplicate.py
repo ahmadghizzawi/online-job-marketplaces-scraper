@@ -17,6 +17,6 @@ for entry in urls:
 	if not parsed['task_template_id'] in unique:
 		unique.append(parsed['task_template_id'])
 		result.append(entry)
-with open('new_file.json', 'w') as nf:
+with open('queries.json', 'w') as nf:
 	json.dump(result, nf)
 
