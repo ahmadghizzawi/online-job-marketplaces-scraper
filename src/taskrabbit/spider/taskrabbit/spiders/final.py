@@ -6,7 +6,7 @@ from Taskrabbit.items import Query
 
 
 class ServicesSpider (scrapy.Spider):
-    name = "final"
+    name = "tasks_urls"
     start_urls = []
     with open('allqueries.json') as f:
         queries = json.load(f)
