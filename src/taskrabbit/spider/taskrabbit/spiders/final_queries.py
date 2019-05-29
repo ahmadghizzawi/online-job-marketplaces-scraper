@@ -6,7 +6,7 @@ result = []
 with open('queries.json') as f:
 	queries = json.load(f)
 	
-with open('cities.json') as f:
+with open('final_cities.json') as f:
 	cities = json.load(f)
 
 for entry in queries:
