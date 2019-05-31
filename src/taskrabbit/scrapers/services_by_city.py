@@ -8,7 +8,8 @@ from slugify import slugify
 
 
 def crawl_site(url, city, task):
-    browser = webdriver.Chrome("/Users/ahmadghizzawi/Documents/Projects/online-job-marketplaces-scraper/chromedriver")
+	#Path to your chromedriver.exe directory
+    browser = webdriver.Chrome("C:\\Users\\sutan\\Documents\\Stage\\online-job-marketplaces-scraper\\chromedriver.exe")
 
     # Load webpage
     browser.get(url)
@@ -25,13 +26,15 @@ def crawl_site(url, city, task):
     # browser.find_element_by_css_selector('#metro-templates .btn.btn-secondary.btn-small.js__formEntry').click()
 
     # TASK INTEREST
+    	# Task interest selected (i'm just browsing)
     browser.find_element_by_id("intent_level_low").click()
 
     browser.find_element_by_css_selector('.btn.btn-primary').click()
 
     # TASK LOCATION / START ADDRESS
+    	#Location selected from the query
     browser.find_element_by_css_selector("input[name='location.freeform']").send_keys(city)
-
+    	#Unit or Apt optional, we selected number 5
     browser.find_element_by_id("address2").send_keys("5")
     time.sleep(1)
     browser.find_element_by_css_selector('.btn.btn-primary').click()
@@ -46,6 +49,7 @@ def crawl_site(url, city, task):
     time.sleep(3)
 
     # TASK OPTIONS
+    	#Loop to select the first option in each elements of the task options
     elements = browser.find_elements_by_css_selector(".build-input-list li:first-of-type > input[type='radio']")
 
     for element in elements:
@@ -53,7 +57,9 @@ def crawl_site(url, city, task):
 
     btn = browser.find_element_by_css_selector('.btn.btn-primary').click()
     time.sleep(1)
+
     # TASK DETAILS
+    	# we fill the task details with one letter in order to be able to select the primary button
     browser.find_element_by_css_selector("textarea[name='description']").send_keys('t')
     time.sleep(1)
 
@@ -61,27 +67,25 @@ def crawl_site(url, city, task):
     time.sleep(1)
 
     # WORKERS LIST
-    # Set time to next week
+    # Task date selected to within a week 
     browser.find_element_by_id("recommendations__schedule-option-next_week").click()
 
+    # sleep time in order to load the whole page correctly
     time.sleep(3)
 
     workers = browser.find_elements_by_css_selector('.recommendations__result_wrapper')
 
+    #Loop to build the list of workers
     list_workers = []
     iteration_number = 1
     for worker in workers:
-        # build worker.
+        # worker build
         worker_dict = {
-            'id': worker.find_element_by_css_selector(
-                '.recommendations__result.recommendations__result--tasker').get_attribute('data-user-id'),
+            'id': worker.find_element_by_css_selector('.recommendations__result.recommendations__result--tasker').get_attribute('data-user-id'),
             'rank': iteration_number,
             'picture': worker.find_element_by_css_selector('.recommendations__avatar__circular').get_attribute('src'),
-            # todo: investigate why these seem to stay the same all the time
-            'positive_rating': worker.find_elements_by_xpath(
-                "//i[@class='ss-lnr-star']/following-sibling::span")[iteration_number - 1].text,
-            'number_of_relevant_tasks': worker.find_elements_by_xpath(
-                "//i[@class='ss-lnr-check-circle']/following-sibling::span/span")[iteration_number - 1].text,
+            'positive_rating': worker.find_elements_by_xpath("//i[@class='ss-lnr-star']/following-sibling::span")[iteration_number - 1].text,
+            'number_of_relevant_tasks': worker.find_elements_by_xpath("//i[@class='ss-lnr-check-circle']/following-sibling::span")[iteration_number - 1].text,
             'great_value_badge': '',
             'elite_tasker': '',
             'new_tasker': '',
@@ -90,51 +94,63 @@ def crawl_site(url, city, task):
             'when_tasking': '',
             'number_of_reviews_received': '',
             'number_of_relevant_reviews_received': '',
-            'per_hour_rate': float(
-                re.findall(r"[-+]?\d*\.\d+|\d+", worker.find_element_by_css_selector('strong').text)[0]),
-            'query': slugify(city + '-' + task),
+            #Return the string of per_hour_rate
+            'per_hour_rate': float(re.findall(r"[-+]?\d*\.\d+|\d+", worker.find_element_by_css_selector('strong').text)[0]),
+            #City and the task separated by '_' 
+            'query': slugify(city + '_' + task),
             'reviews': []
         }
 
         # positive rating
         try:
+        	# Return the float of the percentage of Positve rating
             worker_dict['positive_rating'] = float(int(re.findall(r"[-+]?\d*\.\d+|\d+",
                                                                worker_dict['positive_rating'])[0]) / 100)
         except IndexError:
+        	# Case of positive rating not found
             worker_dict['positive_rating'] = None
 
         # number of relevant tasks
+
         try:
+        	# Return the integer of relevant tasks
             worker_dict['number_of_relevant_tasks'] = int(re.findall(r"[-+]?\d*\.\d+|\d+",
                                                                   worker_dict['number_of_relevant_tasks'])[0])
         except IndexError:
+        	# Case of relevant tasks not found
             worker_dict['number_of_relevant_tasks'] = None
 
         # worker has great value badge?
         try:
+        	# Boolean for value_badge 
             worker.find_element_by_css_selector('.recommendations__great-value-badge')
             worker_dict['great_value_badge'] = True
         except NoSuchElementException:
+        	# Case of value_badge not found
             worker_dict['great_value_badge'] = False
-
-        # worker is a new tasker?
-        try:
-            worker.find_element_by_css_selector('.ss-happy-lined')
-            worker_dict['new_tasker'] = True
-        except NoSuchElementException:
-            worker_dict['new_tasker'] = False
 
         # worker is an elite tasker?
         try:
+        	# Boolean for elite_tasker 
             worker.find_element_by_css_selector('.ss-medal-star')
             worker_dict['elite_tasker'] = True
         except NoSuchElementException:
+        	# Case of elite_tasker not found
             worker_dict['elite_tasker'] = False
 
-        # open user popup
+        # worker is a new tasker?
+        try:
+        	# Boolean for new_tasker
+            worker.find_element_by_css_selector('.ss-happy-lined')
+            worker_dict['new_tasker'] = True
+        except NoSuchElementException:
+        	# Case of new_tasker not found (ss-happy-lined)
+            worker_dict['new_tasker'] = False
+
+        # open user popup (Profile & reviews)
         worker.find_element_by_css_selector('.recommendations__result-name').click()
 
-        # retrieve the first free textc
+        # retrieve the first free text
         try:
             worker_dict['right_person'] = browser.find_elements_by_css_selector('.tasker--bio-responses')[0].text
         except:
@@ -156,10 +172,11 @@ def crawl_site(url, city, task):
             # select all reviews
             reviews_dropdown[-1].click()
         else:
+        	# If worker have no review
             worker_dict['number_of_reviews_received'] = 0
             worker_dict['number_of_relevant_reviews_received'] = 0
 
-        # while clicking on right arrow is permissible, retrieve reviews
+        # while clicking on right arrow is permissible, retrieve the next page of reviews
         next_page = browser.find_elements_by_xpath(
             "//span[@class='current']/following-sibling::a")
         while len(next_page) != 0:
@@ -175,36 +192,47 @@ def crawl_site(url, city, task):
             next_page = browser.find_elements_by_xpath(
                 "//span[@class='current']/following-sibling::a")
             time.sleep(0.5)
-        # close popup
+        # close popup of the worker profile & reviews
         browser.find_element_by_css_selector('.lightbox--dismiss').click()
 
+        # Add the worker to the list of workers
         list_workers.append(worker_dict)
-        # Save user picture
+        # Save users pictures
+        # Must create pics folder in your directory
         urllib.request.urlretrieve(worker_dict['picture'], 'pics/' + str(worker_dict['id']) + ".jpg")
         iteration_number += 1
 
         time.sleep(0.5)
 
+    # Write the list of workers found in a json file 
+    # Must create results folder in your directory
     with open('results/' + slugify(city + '-' + task) + '.json', 'w') as fout:
         json.dump(list_workers, fout)
 
+    # Query finished close the browser
     browser.close()
 
 
 def main():
+	#queries.json must be in the same directory
     with open('queries.json') as f:
         entries = json.load(f)
+    # Counter used to know the number of query 
     counter = 1
     failed = []
     for entry in entries:
         print('Crawling query #', counter, 'out of', len(entries))
         try:
             if entry['city'].endswith('UK'):
+            	# UK cities, UK taskrabbit
                 website = 'https://www.taskrabbit.co.uk'
             elif entry['city'] in ['Toronto, CA', 'Vancouver, CA']:
+            	# Canada cities, Canadien taskrabbit
                 website = 'https://www.taskrabbit.ca'
             else:
+            	# USA taskrabbit
                 website = 'https://www.taskrabbit.com'
+            # List of attrbute for crawl_site fonction
             crawl_site(website + entry['url'], entry['city'], entry['task_title'])
         except Exception as error:
             print('query #', counter, 'failed.')
