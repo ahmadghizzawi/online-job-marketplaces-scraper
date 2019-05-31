@@ -2,7 +2,7 @@ import scrapy
 import json
 import uuid
 
-from taskrabbit.items import TaskRabbitCity, Query
+from Taskrabbit.items import Cities, Query
 
 
 class ServicesSpider (scrapy.Spider):
