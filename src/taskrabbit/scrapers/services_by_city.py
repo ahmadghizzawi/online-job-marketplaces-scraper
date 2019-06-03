@@ -8,7 +8,7 @@ from slugify import slugify
 
 
 def crawl_site(url, city, task):
-    browser = webdriver.Chrome("/Users/ahmadghizzawi/Documents/Projects/online-job-marketplaces-scraper/chromedriver")
+    browser = webdriver.Chrome("/Users/slide/Documents/GitHub/online-job-marketplaces-scraper/chromedriver")
 
     # Load webpage
     browser.get(url)
@@ -41,8 +41,10 @@ def crawl_site(url, city, task):
     boxes = browser.find_elements_by_css_selector(".build-group")
     if len(boxes) == 5:
         print('found 5 boxes')
+        assembly = browser.find_elements_by_css_selector(".build-input-list li:last-of-type > input[type='radio']")
+        for element in assembly:
+            element.click()
         browser.find_element_by_css_selector('.btn.btn-primary').click()
-
     time.sleep(3)
 
     # TASK OPTIONS
@@ -81,7 +83,7 @@ def crawl_site(url, city, task):
             'positive_rating': worker.find_elements_by_xpath(
                 "//i[@class='ss-lnr-star']/following-sibling::span")[iteration_number - 1].text,
             'number_of_relevant_tasks': worker.find_elements_by_xpath(
-                "//i[@class='ss-lnr-check-circle']/following-sibling::span/span")[iteration_number - 1].text,
+                "//i[@class='ss-lnr-check-circle']/following-sibling::span")[iteration_number - 1].text,
             'great_value_badge': '',
             'elite_tasker': '',
             'new_tasker': '',
@@ -162,7 +164,7 @@ def crawl_site(url, city, task):
         # while clicking on right arrow is permissible, retrieve reviews
         next_page = browser.find_elements_by_xpath(
             "//span[@class='current']/following-sibling::a")
-        while len(next_page) != 0:
+        while True:
             # Retrieve reviews
             reviews = browser.find_elements_by_css_selector('.tasker-review')
             if len(reviews) > 0:
@@ -171,10 +173,13 @@ def crawl_site(url, city, task):
                         'text': review.find_element_by_css_selector('.exterior__bottom--sm').text,
                         'date': review.find_element_by_css_selector('.review-author').text.split(',', 1)[1]
                     })
-            next_page[0].click()
-            next_page = browser.find_elements_by_xpath(
+            if len(next_page) > 0:
+                next_page[0].click()
+                next_page = browser.find_elements_by_xpath(
                 "//span[@class='current']/following-sibling::a")
-            time.sleep(0.5)
+                time.sleep(0.5)
+            if len(next_page) == 0:
+                break
         # close popup
         browser.find_element_by_css_selector('.lightbox--dismiss').click()
 
