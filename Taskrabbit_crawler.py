@@ -8,8 +8,9 @@ from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
 import os
 import subprocess
+import time
 
-def crawl_site(url, city, task):
+def crawl_site(url, city, task, output, pics):
 	#Path to your chromedriver.exe directory
     browser = webdriver.Chrome("/Users/slide/Documents/GitHub/online-job-marketplaces-scraper/chromedriver")
 
@@ -43,6 +44,7 @@ def crawl_site(url, city, task):
     time.sleep(1)
 
     # TASK END ADDRESS (HELP MOVING CASE)
+    # Condition for the case where we have 5 boxes (assembly task)
     boxes = browser.find_elements_by_css_selector(".build-group")
     if len(boxes) == 5:
         print('found 5 boxes')
@@ -207,14 +209,15 @@ def crawl_site(url, city, task):
         list_workers.append(worker_dict)
         # Save users pictures
         # Must create pics folder in your directory
-        urllib.request.urlretrieve(worker_dict['picture'], './Datasets/Taskrabbit/pics/' + str(worker_dict['id']) + ".jpg")
+        
+        urllib.request.urlretrieve(worker_dict['picture'], pics+'/' + str(worker_dict['id']) + ".jpg")
         iteration_number += 1
 
         time.sleep(0.5)
 
     # Write the list of workers found in a json file 
-    # Must create results folder in your directory
-    with open('./Datasets/Taskrabbit/results/' + slugify(city + '-' + task) + '.json', 'w') as fout:
+    # Must create results folder in the directory of datasets
+    with open(output+'/' + slugify(city + '-' + task) + '.json', 'w') as fout:
         json.dump(list_workers, fout)
 
     # Query finished close the browser
@@ -224,7 +227,8 @@ def crawl_site(url, city, task):
 def main():
     parser = argparse.ArgumentParser(description= 'taskrabbit crawler')
     parser.add_argument('-f', '--file', type =str, metavar='', help=' The files containing the queries you wish to work with')
-    parser.add_argument('-o', '--output', type= str,metavar='',help='The output directory containing the result')
+    parser.add_argument('-r', '--results', type= str,metavar='',default='results/',help='The output directory containing the result')
+    parser.add_argument('-p', '--pics', type= str,metavar='',default='pics/',help='The output directory containing the pics')
 
     args = parser.parse_args()
     if args.file is None:
@@ -242,6 +246,18 @@ def main():
         subprocess.call('cp final_queries.json ./../../data/taskrabbit/final_queries.json',shell=True ,cwd='./src/Taskrabbit/')
         subprocess.call('rm *.json',shell=True ,cwd='./src/Taskrabbit/')
         args.file = 'final_queries.json'
+
+    # Creation of the sub folder pics and results with the timestamp of the program execution where we store the results
+    timestr = time.strftime("%m%d-%H-%M")
+    source = './Datasets/Taskrabbit/'+args.pics
+    pic = os.path.join(source+'pics '+timestr)
+    if not os.path.exists(pic):
+    	os.makedirs(pic)
+
+    source2 = './Datasets/Taskrabbit/'+args.results
+    res = os.path.join(source2+'results '+timestr)
+    if not os.path.exists(res):
+    	os.makedirs(res)
 
 
     with open('./Data/taskrabbit/'+args.file) as f:
@@ -262,7 +278,7 @@ def main():
             	# USA taskrabbit
                 website = 'https://www.taskrabbit.com'
             # List of attrbute for crawl_site fonction
-            crawl_site(website + entry['url'], entry['city'], entry['task_title'])
+            crawl_site(website + entry['url'], entry['city'], entry['task_title'],res,pic)
         except Exception as error:
             print('query #', counter, 'failed.')
             print('Error:', error)
