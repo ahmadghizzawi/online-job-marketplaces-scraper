@@ -2,7 +2,7 @@ import scrapy
 import uuid 
 
 from Taskrabbit.items import Query
-class Allqueries(scrapy.Spider):
+class AllQueries(scrapy.Spider):
 	name = "allqueries"
 	start_urls = ['https://www.taskrabbit.com/m/all-services']
 
