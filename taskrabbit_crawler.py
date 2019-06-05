@@ -282,7 +282,7 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open('./Data/taskrabbit/' + args.queries) as f:
+    with open('./data/taskrabbit/' + args.queries) as f:
         entries = json.load(f)
     # Counter used to know the number of query 
     counter = 1

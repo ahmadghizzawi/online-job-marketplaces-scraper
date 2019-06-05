@@ -17,20 +17,20 @@ depending on how severe the changes are.
 
 ### Crawl TaskRabbit
 In order to run taskrabbit_crawler.py you need to execute the following command:
-`python3 Taskrabbit_crawler.py -w webDriver -q queriesFiles `
+`python Taskrabbit_crawler.py -w webDriver -q queriesFiles `
 
 webDriver option: in the webDriver option you need to provide the path to your chrome driver that you downloaded earlier. This parameter is required in order to execute the script 
 
 queriesFiles option: will be the queries json file containing an id, task_title, city and a url. It needs to be placed in ./data/taskrabbit , in case you didn't provide an attribute for -f the crawler will generate a new queries file with the help of the spider where it default name will be final_queries.json
 
-output option: the default output folder is ./Datasets/Taskrabbit/ . In case you want to change the output folder you need to create manually the folder in which you want to save the results and then pass the folder path with -o option.
+output option: the default output folder is ./datasets/taskrabbit/ . In case you want to change the output folder you need to create manually the folder in which you want to save the results and then pass the folder path with -o option.
 You will need to run the following command:
 
-`python3 Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
+`python Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
 
 
 ## Results 
-You can find the results of taskrabbit_crawler.py in ./Datasets/Taskrabbit/
+You can find the results of taskrabbit_crawler.py in ./datasets/taskrabbit/
 in this folder you will find the time stamp folder created when you launched the scripts (format Year-Months_DayTHour-Min-Sec). Inside that folder there will be one folder named pics containing the pics crawled by the queries and a results folder containing the results of the differents json file for each successful query. Finally you will find also a json file named failed_queries.json containing the unsuccessful query
 
 # Authors
