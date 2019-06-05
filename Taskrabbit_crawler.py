@@ -11,10 +11,11 @@ import subprocess
 import time
 from datetime import datetime
 
-def crawl_site(url, city, task, web ,output_path, pics_path):
+def crawl_site(url, city, task, driver_path ,output_path, pics_path):
 	#Path to your chromedriver.exe directory
-    browser = webdriver.Chrome(web)
-
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    browser = webdriver.Chrome(driver_path,options=options)
     # Load webpage
     browser.get(url)
     browser.implicitly_wait(1)
