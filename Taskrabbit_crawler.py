@@ -10,7 +10,7 @@ import os
 import subprocess
 import time
 
-def crawl_site(url, city, task, output, pics):
+def crawl_site(url, city, task, output_path, pics_path):
 	#Path to your chromedriver.exe directory
     browser = webdriver.Chrome("/Users/slide/Documents/GitHub/online-job-marketplaces-scraper/chromedriver")
 
