@@ -8,20 +8,21 @@
 import scrapy
 
 
-class TaskRabbitCity(scrapy.Item):
+class Cities(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    city = scrapy.Field()
+    country = scrapy.Field()
+    url = scrapy.Field()
+    
+class Query(scrapy.Item):
+    id = scrapy.Field()
+    task_title = scrapy.Field()
     city = scrapy.Field()
     country = scrapy.Field()
     url = scrapy.Field()
 
-
-class Query(scrapy.Item):
-    id = scrapy.Field()
-    task_title = scrapy.Field()
-    # city = scrapy.Field()
-    country = scrapy.Field()
-    url = scrapy.Field()
-
-class TaskRabbitWorkerInQuery(scrapy.Item):
+class Worker(scrapy.Item):
     id = scrapy.Field()
     ranking = scrapy.Field()
     picture = scrapy.Field()
@@ -36,4 +37,3 @@ class TaskRabbitWorkerInQuery(scrapy.Item):
     number_of_reviews_received = scrapy.Field()
     per_hour_rate = scrapy.Field()
     query = scrapy.Field()
-
