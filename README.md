@@ -42,7 +42,7 @@ You will need to run the following command:
 
 ## Results 
 You can find the results of taskrabbit_crawler.py in ./Datasets/Taskrabbit/
-in this folder you will find the time stamp folder created when you launched the scripts, inside that folder there will be one folder named pics containing the pics crawled by the queries and a results folder containing the results of the differents json file for each successful query. Finally you will find also a json file named failed_queries.json containing the unsuccessful query
+in this folder you will find the time stamp folder created when you launched the scripts (format Year-Months_DayTHour-Min-Sec). Inside that folder there will be one folder named pics containing the pics crawled by the queries and a results folder containing the results of the differents json file for each successful query. Finally you will find also a json file named failed_queries.json containing the unsuccessful query
 
 # Author
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
