@@ -9,10 +9,11 @@ from slugify import slugify
 import os
 import subprocess
 import time
+from datetime import datetime
 
-def crawl_site(url, city, task, output_path, pics_path):
+def crawl_site(url, city, task, web ,output_path, pics_path):
 	#Path to your chromedriver.exe directory
-    browser = webdriver.Chrome("/Users/slide/Documents/GitHub/online-job-marketplaces-scraper/chromedriver")
+    browser = webdriver.Chrome(web)
 
     # Load webpage
     browser.get(url)
@@ -210,14 +211,14 @@ def crawl_site(url, city, task, output_path, pics_path):
         # Save users pictures
         # Must create pics folder in your directory
         
-        urllib.request.urlretrieve(worker_dict['picture'], pics+'/' + str(worker_dict['id']) + ".jpg")
+        urllib.request.urlretrieve(worker_dict['picture'], pics_path+'/' + str(worker_dict['id']) + ".jpg")
         iteration_number += 1
 
         time.sleep(0.5)
 
     # Write the list of workers found in a json file 
     # Must create results folder in the directory of datasets
-    with open(output+'/' + slugify(city + '-' + task) + '.json', 'w') as fout:
+    with open(output_path+'/' + slugify(city + '-' + task) + '.json', 'w') as fout:
         json.dump(list_workers, fout)
 
     # Query finished close the browser
@@ -226,12 +227,12 @@ def crawl_site(url, city, task, output_path, pics_path):
 
 def main():
     parser = argparse.ArgumentParser(description= 'taskrabbit crawler')
-    parser.add_argument('-f', '--file', type =str, metavar='', help=' The files containing the queries you wish to work with')
-    parser.add_argument('-r', '--results', type= str,metavar='',default='results/',help='The output directory containing the result')
-    parser.add_argument('-p', '--pics', type= str,metavar='',default='pics/',help='The output directory containing the pics')
+    parser.add_argument('-w', '--web', type =str, metavar='', help=' The path to your chrome web driver', required = True)
+    parser.add_argument('-q', '--queries', type =str, metavar='', help=' The files containing the queries you wish to work with')
+    parser.add_argument('-o', '--output', type= str,metavar='',default='./datasets/taskrabbit/',help='The output directory containing the results, pics and the failed queries')
 
     args = parser.parse_args()
-    if args.file is None:
+    if args.queries is None:
         print('No input file passed \nAutomatic crawl Taskrabbit.com')
         subprocess.call('scrapy crawl cities -o cities.json', shell=True ,cwd='./src/Taskrabbit/spider/Taskrabbit/')
         subprocess.call('mv cities.json ./../../cities.json',shell=True ,cwd='./src/Taskrabbit/spider/Taskrabbit/')
@@ -247,20 +248,26 @@ def main():
         subprocess.call('rm *.json',shell=True ,cwd='./src/Taskrabbit/')
         args.file = 'final_queries.json'
 
-    # Creation of the sub folder pics and results with the timestamp of the program execution where we store the results
-    timestr = time.strftime("%m%d-%H-%M")
-    source = './Datasets/Taskrabbit/'+args.pics
-    pic = os.path.join(source+'pics '+timestr)
+    # Creation of the sub folder pics and results in the timestamp folder
+    now = datetime.now().replace(microsecond=0).isoformat().replace(':', '-')
+    timestr = str(now)
+    source1 = args.output
+    folder = os.path.join(source1+timestr)
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
+    source = folder+'/'
+    pic = os.path.join(source+'pics')
     if not os.path.exists(pic):
     	os.makedirs(pic)
 
-    source2 = './Datasets/Taskrabbit/'+args.results
-    res = os.path.join(source2+'results '+timestr)
+    source2 = folder+'/'
+    res = os.path.join(source2+'results')
     if not os.path.exists(res):
     	os.makedirs(res)
 
 
-    with open('./Data/taskrabbit/'+args.file) as f:
+    with open('./Data/taskrabbit/'+args.queries) as f:
         entries = json.load(f)
     # Counter used to know the number of query 
     counter = 1
@@ -278,14 +285,14 @@ def main():
             	# USA taskrabbit
                 website = 'https://www.taskrabbit.com'
             # List of attrbute for crawl_site fonction
-            crawl_site(website + entry['url'], entry['city'], entry['task_title'],res,pic)
+            crawl_site(website + entry['url'], entry['city'], entry['task_title'],args.web,res,pic)
         except Exception as error:
             print('query #', counter, 'failed.')
             print('Error:', error)
             failed.append(entry)
         counter += 1
         time.sleep(5)
-        with open('./Datasets/Taskrabbit/failed_queries.json', 'w') as f:
+        with open(folder+'/failed_queries.json', 'w') as f:
             json.dump(failed, f)
 if __name__ == "__main__":
     main()
