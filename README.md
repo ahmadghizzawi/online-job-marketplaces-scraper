@@ -35,4 +35,5 @@ in this folder you will find the time stamp folder created when you launched the
 
 # Authors
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
+
 Sultan Mourthadhoi (sultan.mourthadhoi@etu.univ-grenoble-alpes.fr)
