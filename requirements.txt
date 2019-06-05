@@ -1,4 +1,4 @@
-slugify==0.0.1
+python-slugify
 urllib3==1.23
 selenium===3.141.0
 scrapy
