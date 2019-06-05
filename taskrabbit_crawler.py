@@ -242,18 +242,21 @@ def main():
                         help='The output directory containing the results, pics and the failed queries')
 
     args = parser.parse_args()
+
+    scrapy_project_path = './src/Taskrabbit/spider/Taskrabbit/'
+
     if args.queries is None:
         print('No input file passed \nAutomatic crawl Taskrabbit.com')
-        subprocess.call('scrapy crawl cities -o cities.json', shell=True, cwd='./src/Taskrabbit/spider/Taskrabbit/')
-        subprocess.call('mv cities.json ./../../cities.json', shell=True, cwd='./src/Taskrabbit/spider/Taskrabbit/')
+        subprocess.call('scrapy crawl cities -o cities.json', shell=True, cwd=scrapy_project_path)
+        subprocess.call('mv cities.json ./../../cities.json', shell=True, cwd=scrapy_project_path)
         subprocess.call('python3 clean_cities.py', shell=True, cwd='./src/Taskrabbit/')
         subprocess.call('cp final_cities.json ./../../data/taskrabbit/final_cities.json', shell=True,
                         cwd='./src/Taskrabbit/')
         subprocess.call('scrapy crawl allqueries -o allqueries.json', shell=True,
-                        cwd='./src/Taskrabbit/spider/Taskrabbit/')
-        subprocess.call('scrapy crawl task_urls -o final.json', shell=True, cwd='./src/Taskrabbit/spider/Taskrabbit/')
-        subprocess.call('mv final.json ./../../final.json', shell=True, cwd='./src/Taskrabbit/spider/Taskrabbit/')
-        subprocess.call('rm allqueries.json', shell=True, cwd='./src/Taskrabbit/spider/Taskrabbit/')
+                        cwd=scrapy_project_path)
+        subprocess.call('scrapy crawl task_urls -o final.json', shell=True, cwd=scrapy_project_path)
+        subprocess.call('mv final.json ./../../final.json', shell=True, cwd=scrapy_project_path)
+        subprocess.call('rm allqueries.json', shell=True, cwd=scrapy_project_path)
         subprocess.call('python3 helpers.py', shell=True, cwd='./src/Taskrabbit/')
         subprocess.call('python3 final_queries.py', shell=True, cwd='./src/Taskrabbit/')
         subprocess.call('cp final_queries.json ./../../data/taskrabbit/final_queries.json', shell=True,
