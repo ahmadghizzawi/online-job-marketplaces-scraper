@@ -20,29 +20,29 @@ or
 
 `pip3 install -r requirements.txt`
 
-As sometimes in linux/macOS/windows pip refers to python 2.x
+As sometimes in linux/macOS/windows pip refers to python 2.x as the default python language
 
 ## TaskRabbit
 The TaskRabbit scraper was written in November 2018. Therefore, you might have to do some changes before scraping
 depending on how severe the changes are. 
 
 ## Running the script
-In order to run Taskrabbit_crawler.py you need to execute the following command:
-`python3 Taskrabbit_crawler.py -f queriesFiles `
+In order to run taskrabbit_crawler.py you need to execute the following command:
+`python3 Taskrabbit_crawler.py -w webDriver -q queriesFiles `
+
+webDriver option: in the webDriver option you need to provide the path to your chrome driver that you downloaded earlier. This parameter is required in order to execute the script 
 
 queriesFiles option: will be the queries json file containing an id, task_title, city and a url. It needs to be placed in ./data/taskrabbit , in case you didn't provide an attribute for -f the crawler will generate a new queries file with the help of the spider where it default name will be final_queries.json
 
-resultFolder option: the default result folder is ./Datasets/Taskrabbit/results . In case you want to change the results folder you need to create a new folder in ./Datasets/Taskrabbit/ with the wanted name and then pass the folder name with -r option. The results will be in a new sub directory with the time when the crawler is executed (format : MonthsDay-Hour-Min). You will need to run the following command:
+output option: the default output folder is ./Datasets/Taskrabbit/ . In case you want to change the output folder you need to create manually the folder in which you want to save the results and then pass the folder path with -o option.
+You will need to run the following command:
 
-`python3 Taskrabbit_crawler.py -f queriesFiles -r resultFolder`
+`python3 Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
 
-picsFolder option: the default pic folder is ./Datasets/Taskrabbit/pics . In case you want to change the pics folder you need to create a new folder in ./Datasets/Taskrabbit/ with the wanted name and then pass the folder name with -p option. The results will be in a new sub directory with the time when the crawler is executed (format : MonthsDay-Hour-Min). You will need to run the following command:
-
-`python3 Taskrabbit_crawler.py -f queriesFiles -p picsFolder`
 
 ## Results 
-You can find the results of Taskrabbit_crawler.py in ./Datasets/Taskrabbit/ 
-In the pics folder you will find the some sub_folder containing the pics gathered from the crawler, the sub_folder are differents in their timeStamps where each one is created when the crawler was launched. Same goes with results folder where we find the json file of each query.
+You can find the results of taskrabbit_crawler.py in ./Datasets/Taskrabbit/
+in this folder you will find the time stamp folder created when you launched the scripts, inside that folder there will be one folder named pics containing the pics crawled by the queries and a results folder containing the results of the differents json file for each successful query. Finally you will find also a json file named failed_queries.json containing the unsuccessful query
 
 # Author
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
