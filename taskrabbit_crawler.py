@@ -262,7 +262,7 @@ def main():
         subprocess.call('cp final_queries.json ./../../data/taskrabbit/final_queries.json', shell=True,
                         cwd='./src/Taskrabbit/')
         subprocess.call('rm *.json', shell=True, cwd='./src/Taskrabbit/')
-        args.file = 'final_queries.json'
+        args.queries = 'final_queries.json'
 
     # Creation of the sub folder pics and results in the timestamp folder
     now = datetime.now().replace(microsecond=0).isoformat().replace(':', '-')
