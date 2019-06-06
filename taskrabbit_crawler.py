@@ -240,6 +240,10 @@ def main():
                         help=' The files containing the queries you wish to work with')
     parser.add_argument('-o', '--output', type=str, metavar='', default='./datasets/taskrabbit/',
                         help='The output directory containing the results, pics and the failed queries')
+    parser.add_argument('-b', '--beg',type=int, metavar='',
+                        help='The beginning point of the query file',required=True)
+    parser.add_argument('-e', '--end', type=int, metavar='',
+                        help='ending point of the query file',required=True)
 
     args = parser.parse_args()
 
@@ -247,24 +251,36 @@ def main():
 
     if args.queries is None:
         print('No input file passed \nAutomatic crawl Taskrabbit.com')
+        # crawling of the taskrabbit cities from the scrapy path
         subprocess.call('scrapy crawl cities -o cities.json', shell=True, cwd=scrapy_project_path)
+        # moving the cities file to the correct folder for the next step 
         subprocess.call('mv cities.json ./../../cities.json', shell=True, cwd=scrapy_project_path)
+        # cleaning and removing duplicate from cities.json 
         subprocess.call('python3 clean_cities.py', shell=True, cwd='./src/Taskrabbit/')
+        # copying the final and clean city file to the data folder
         subprocess.call('cp final_cities.json ./../../data/taskrabbit/final_cities.json', shell=True,
                         cwd='./src/Taskrabbit/')
+        # crawling the list of all the task available 
         subprocess.call('scrapy crawl allqueries -o allqueries.json', shell=True,
                         cwd=scrapy_project_path)
+        # crawling the last url of each task 
         subprocess.call('scrapy crawl task_urls -o final.json', shell=True, cwd=scrapy_project_path)
+        # moving the query file to the correct for the next step
         subprocess.call('mv final.json ./../../final.json', shell=True, cwd=scrapy_project_path)
+        # deleting the intermediate file allqueries 
         subprocess.call('rm allqueries.json', shell=True, cwd=scrapy_project_path)
+        # deleting duplicate on the query file 
         subprocess.call('python3 helpers.py', shell=True, cwd='./src/Taskrabbit/')
+        # merging the city and query file together
         subprocess.call('python3 final_queries.py', shell=True, cwd='./src/Taskrabbit/')
+        # copying the final query file to the data folder
         subprocess.call('cp final_queries.json ./../../data/taskrabbit/final_queries.json', shell=True,
                         cwd='./src/Taskrabbit/')
+        # removing all of the json file left in src folder
         subprocess.call('rm *.json', shell=True, cwd='./src/Taskrabbit/')
         args.queries = 'final_queries.json'
 
-    # Creation of the sub folder pics and results in the timestamp folder
+    # Creation of the timeStamp folder
     now = datetime.now().replace(microsecond=0).isoformat().replace(':', '-')
     timestr = str(now)
     source1 = args.output
@@ -272,11 +288,13 @@ def main():
     if not os.path.exists(folder):
         os.makedirs(folder)
 
+    # Creation of the sub folder pics inside of the timeStamp folder
     source = folder + '/'
     pic = os.path.join(source + 'pics')
     if not os.path.exists(pic):
         os.makedirs(pic)
 
+    # Creation of the sub folder results inside of the timeStamp folder
     source2 = folder + '/'
     res = os.path.join(source2 + 'results')
     if not os.path.exists(res):
@@ -287,7 +305,7 @@ def main():
     # Counter used to know the number of query 
     counter = 1
     failed = []
-    for entry in entries:
+    for entry in entries[args.beg: args.end + 1]:
         print('Crawling query #', counter, 'out of', len(entries))
         try:
             if entry['city'].endswith('UK'):
