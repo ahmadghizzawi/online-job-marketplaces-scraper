@@ -242,7 +242,7 @@ def main():
                         help='The output directory containing the results, pics and the failed queries')
     parser.add_argument('-b', '--beg',type=int, metavar='',default=0,
                         help='The beginning point of the query file')
-    parser.add_argument('-e', '--end', type=int, metavar='',default=6272,
+    parser.add_argument('-e', '--end', type=int, metavar='',default=10000,
                         help='ending point of the query file')
 
     args = parser.parse_args()
@@ -302,37 +302,40 @@ def main():
 
     with open('./data/taskrabbit/' + args.queries) as f:
         entries = json.load(f)
+    
+    failed = []
+    # check if the entries values are inside the range of the file
+    if(args.beg < 0 or args.end > len(entries)):
+        args.beg = 0
+        args.end = len(entries)
+        print("entries changed to their default values ")
+
     # Counter used to know the number of query 
     counter = args.beg
-    failed = []
-    nb_query = (args.end - args.beg)
-    if(args.beg < args.end and args.beg >= 0 and args.end <=len(entries)):
-        print('Crawling queries from', args.beg, 'to', args.end)
-        for entry in entries[args.beg: args.end + 1]:
-            print('Running query #', counter, 'out of', nb_query)
-            try:
-                if entry['city'].endswith('UK'):
-                    # UK cities, UK taskrabbit
-                    website = 'https://www.taskrabbit.co.uk'
-                elif entry['city'] in ['Toronto, CA', 'Vancouver, CA']:
-                    # Canada cities, Canadien taskrabbit
-                    website = 'https://www.taskrabbit.ca'
-                else:
-                    # USA taskrabbit
-                    website = 'https://www.taskrabbit.com'
-                # List of attrbute for crawl_site fonction
-                crawl_site(website + entry['url'], entry['city'], entry['task_title'], args.web, res, pic)
-            except Exception as error:
-                print('query #', counter, 'failed.')
-                print('Error:', error)
-                failed.append(entry)
-            counter += 1
-            time.sleep(5)
-            with open(folder + '/failed_queries.json', 'w') as f:
-                json.dump(failed, f)
-    else:
-        print('please re-run the crawler with entries inside the range of the query file: \n',
-              'entries between', 0 , 'and', len(entries))
+    nb_queries = (args.end - args.beg)
+    print('Crawling queries from', args.beg, 'to', args.end)
+    for entry in entries[args.beg: args.end + 1]:
+        print('Running query #', counter, 'out of', nb_queries, 'queries')
+        try:
+            if entry['city'].endswith('UK'):
+                # UK cities, UK taskrabbit
+                website = 'https://www.taskrabbit.co.uk'
+            elif entry['city'] in ['Toronto, CA', 'Vancouver, CA']:
+                # Canada cities, Canadien taskrabbit
+                website = 'https://www.taskrabbit.ca'
+            else:
+                # USA taskrabbit
+                website = 'https://www.taskrabbit.com'
+            # List of attrbute for crawl_site fonction
+            crawl_site(website + entry['url'], entry['city'], entry['task_title'], args.web, res, pic)
+        except Exception as error:
+            print('query #', counter, 'failed.')
+            print('Error:', error)
+            failed.append(entry)
+        counter += 1
+        time.sleep(5)
+        with open(folder + '/failed_queries.json', 'w') as f:
+            json.dump(failed, f)
 
 
 
