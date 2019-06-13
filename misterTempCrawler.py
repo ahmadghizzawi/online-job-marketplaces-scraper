@@ -10,14 +10,15 @@ import os
 import subprocess
 import time
 
-def crawl_site(url, city, task):
-	#Path to your chromedriver.exe directory
+def crawl_site(url, city, task,chromedriver):
 
+	#Path to your chromedriver.exe directory
     options = webdriver.ChromeOptions()
-    #options.add_argument('headless')
+    options.add_argument('headless')
+    options.add_argument("--window-size=1920,1080") #Necessary for headless option otherwise the code raises an exception
 
 	#Path to your chromedriver.exe directory
-    browser = webdriver.Chrome("/home/boubou/Stage/chromedriver",chrome_options=options)
+    browser = webdriver.Chrome(chromedriver,chrome_options=options)
     # Load webpage
     browser.get(url)
     affiche('charge + url')
@@ -26,13 +27,13 @@ def crawl_site(url, city, task):
     # Enter task and city
     browser.find_element_by_class_name('react-autosuggest__input').send_keys(task)
     browser.find_element_by_xpath("//input[@placeholder='Ville']").send_keys(city)
-    time.sleep(3)
+    time.sleep(1)
     browser.find_element_by_css_selector('button').click()
 
     affiche('charge page service')
-    time.sleep(3)
+    time.sleep(1)
     browser.find_element_by_class_name('filter-checkbox-photo-video').click()
-    time.sleep(3)
+    time.sleep(1)
     list_workers = []
     iteration_number = 0
     try:
@@ -40,6 +41,10 @@ def crawl_site(url, city, task):
         number_of_pages = int(browser.find_element_by_xpath("//button[@class='next']/preceding-sibling::button").text)
     except NoSuchElementException:
         number_of_pages = 1
+
+    #On crée un dossier pour stocker les infos
+    if not os.path.exists('datasets/mistertemp/'+ city+'-'+ task + '/'):
+        os.makedirs('datasets/mistertemp/'+ city+'-'+ task + '/')
 
     affiche('commence le crawling')
     for k in range(number_of_pages):
@@ -65,7 +70,8 @@ def crawl_site(url, city, task):
                     # No rating
                     worker_dict['rating'] = None
                 list_workers.append(worker_dict)
-                #urllib.request.urlretrieve(worker_dict['picture'], 'essai'+'/' + str(worker_dict['query'])+ str(worker_dict['page']) + str(worker_dict['rank']) + ".jpg")
+                urllib.request.urlretrieve(worker_dict['picture'], 'datasets/mistertemp/'+ city+'-'+ task + '/'+ str(worker_dict['query'])+ str(worker_dict['page']) + str(worker_dict['rank']) + ".jpg")
+
         except NoSuchElementException:
             affiche("Plus d'éléments")
             affiche("Nouvelle Page")
@@ -74,7 +80,7 @@ def crawl_site(url, city, task):
             iteration_number+=i
             time.sleep(3)
 
-    with open('essai'+'/' + slugify(city + '-' + task) + '.json', 'w') as fout:
+    with open('datasets/mistertemp/' + city+'-'+ task + '/' + slugify(city + '-' + task) + '.json', 'w') as fout:
         json.dump(list_workers, fout ,ensure_ascii=False)
 
     browser.close()
@@ -84,6 +90,10 @@ def affiche(s):
         print(s)
 
 def main():
+    parser = argparse.ArgumentParser(description= 'mistertemp crawler')
+    parser.add_argument('-c','--chromedriver', type=str, metavar='',default='/home/boubou/Stage/chromedriver',help='The PATH of the chromedriver')
+    args = parser.parse_args()
+
     with open('./data/mistertemp/' + 'final_services.json') as f:
         entries = json.load(f)
     with open('./data/mistertemp/' + 'final_cities.json') as f:
@@ -93,7 +103,7 @@ def main():
         for city in cities:
             affiche('query'+str(compteur))
             compteur+=1
-            crawl_site('https://www.mistertemp.com/espace-recruteur/',city['city'],entry['service'])
+            crawl_site('https://www.mistertemp.com/espace-recruteur/',city['city'],entry['service'],args.chromedriver)
 
 
 main()
