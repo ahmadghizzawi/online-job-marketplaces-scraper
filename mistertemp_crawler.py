@@ -209,7 +209,7 @@ def main():
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.workers
     ) as executor:
-        list = [
+        crawling_args = [
             (
                 "https://www.mistertemp.com/espace-recruteur/",
                 entry["city"],
@@ -220,7 +220,7 @@ def main():
             )
             for entry in query
         ]
-        executor.map(crawl_site, list)
+        executor.map(crawl_site, crawling_args)
 
 
 main()
