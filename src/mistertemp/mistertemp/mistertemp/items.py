@@ -15,12 +15,14 @@ class Cities(scrapy.Item):
     country = scrapy.Field()
     url = scrapy.Field()
 
+
 class Query(scrapy.Item):
     id = scrapy.Field()
     task_title = scrapy.Field()
     city = scrapy.Field()
     country = scrapy.Field()
     url = scrapy.Field()
+
 
 class Worker(scrapy.Item):
     id = scrapy.Field()
