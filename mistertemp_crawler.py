@@ -12,15 +12,15 @@ from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
 
 
-def crawl_site(arg):
-    url, city, task, chromedriver, output, pics = arg
+def crawl_site(args):
+    url, city, task, chromedriver_path, output_path, pics_path = args
     # Path to your chromedriver.exe directory
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     # Necessary for headless option otherwise the code raises an exception
     options.add_argument("--window-size=1920,1080")
     # Path to your chromedriver.exe directory
-    browser = webdriver.Chrome(chromedriver, chrome_options=options)
+    browser = webdriver.Chrome(chromedriver_path, chrome_options=options)
     # Load webpage
     browser.get(url)
     browser.implicitly_wait(1)
@@ -85,7 +85,7 @@ def crawl_site(arg):
                 list_workers.append(worker_dict)
                 urllib.request.urlretrieve(
                     worker_dict["picture"],
-                    pics
+                    pics_path
                     + "/"
                     + worker_dict["query"]
                     + "-"
@@ -104,7 +104,7 @@ def crawl_site(arg):
     # Write the list of workers found in a json file
     # Must create results folder in the directory of datasets
     with open(
-        output + "/" + slugify(city + "-" + task) + ".json", "w"
+        output_path + "/" + slugify(city + "-" + task) + ".json", "w"
     ) as fout:
         json.dump(list_workers, fout)
 
