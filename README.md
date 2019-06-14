@@ -33,6 +33,7 @@ The TaskRabbit scraper was written in June 2019.
 
 ### Crawl MisterTemp
 In order to run mistertemp_crawler.py you need to execute the following command:
+
 `python mistertemp.py.py -w webDriver -q queriesFiles 
 `
 mistertemp_crawler.py has one more parameter than taskrabbit_crawler.py.add
