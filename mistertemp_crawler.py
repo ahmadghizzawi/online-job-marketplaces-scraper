@@ -114,8 +114,8 @@ def crawl_site(arg):
 def main():
     parser = argparse.ArgumentParser(description="mistertemp crawler")
     parser.add_argument(
-        "-c",
-        "--chromedriver",
+        "-w",
+        "--webdriver",
         type=str,
         metavar="",
         required=True,
