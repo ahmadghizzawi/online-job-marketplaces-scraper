@@ -19,11 +19,6 @@ depending on how severe the changes are.
 In order to run taskrabbit_crawler.py you need to execute the following command:
 `python Taskrabbit_crawler.py -w webDriver -q queriesFiles `
 
-### Crawl Mistertemp
-In order to run mistertemp_crawler.py you need to execute the following command:
-`python mistertemp.py.py -w webDriver -q queriesFiles `
-
-
 webDriver option: in the webDriver option you need to provide the path to your chrome driver that you downloaded earlier. This parameter is required in order to execute the script 
 
 queriesFiles option: will be the queries json file containing an id, task_title, city and a url. It needs to be placed in ./data/taskrabbit , in case you didn't provide an attribute for -f the crawler will generate a new queries file with the help of the spider where it default name will be final_queries.json
@@ -32,6 +27,16 @@ output option: the default output folder is ./datasets/taskrabbit/ . In case you
 You will need to run the following command:
 
 `python Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
+
+## Mistertemp
+The TaskRabbit scraper was written in June 2019.
+
+### Crawl TaskRabbit
+In order to run mistertemp_crawler.py you need to execute the following command:
+`python mistertemp.py.py -w webDriver -q queriesFiles 
+`
+mistertemp_crawler.py has one more parameter than taskrabbit_crawler.py.add
+Threads option: The mistertemp crawler uses only one thread originilay. To increase the speed of the computation choose the number of threads the program will use with the attribute -t
 
 
 ## Results 
