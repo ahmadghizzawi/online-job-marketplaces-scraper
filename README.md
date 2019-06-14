@@ -28,6 +28,18 @@ You will need to run the following command:
 
 `python Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
 
+## MisterTemp
+The TaskRabbit scraper was written in June 2019.
+
+### Crawl MisterTemp
+In order to run mistertemp_crawler.py you need to execute the following command:
+
+`python mistertemp.py.py -w webDriver -q queriesFiles 
+`
+
+mistertemp_crawler.py has one more parameter than taskrabbit_crawler.py.add
+Threads option: The MisterTemp crawler uses only one thread originilay. To increase the speed of the computation choose the number of threads the program will use with the attribute -t
+
 
 ## Results 
 You can find the results of taskrabbit_crawler.py in ./datasets/taskrabbit/
