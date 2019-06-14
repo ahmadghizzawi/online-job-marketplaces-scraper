@@ -122,8 +122,8 @@ def main():
         help="The PATH of the chromedriver",
     )
     parser.add_argument(
-        "-f",
-        "--file",
+        "-q",
+        "--QueriesFiles",
         type=str,
         metavar="",
         help=" The files containing the queries you wish to work with",
@@ -137,14 +137,6 @@ def main():
         help="The output directory containing the results, pics and the failed queries",
     )
     parser.add_argument(
-        "-p",
-        "--pics",
-        type=str,
-        metavar="",
-        default="pics/",
-        help="The output directory containing the pics",
-    )
-    parser.add_argument(
         "-t",
         "--workers",
         type=int,
@@ -154,7 +146,7 @@ def main():
     )
     args = parser.parse_args()
 
-    if args.file is None:
+    if args.QueriesFiles is None:
         print("No input file passed \nAutomatic crawl mistertemp.com")
         subprocess.call(
             "scrapy crawl cities -o cities.json",
@@ -189,7 +181,7 @@ def main():
         subprocess.call(
             "rm *.json", shell=True, cwd="./src/mistertemp/mistertemp"
         )
-        args.file = "queries.json"
+        args.QueriesFiles = "queries.json"
 
     # Creation of the timeStamp folder
     now = datetime.now().isoformat().replace(":", "-")
@@ -198,7 +190,7 @@ def main():
     folder = os.path.join(source1 + timestr)
     if not os.path.exists(folder):
         os.makedirs(folder)
-        source = folder + "/"
+    source = folder + "/"
 
     # Creation of the sub folder pics inside of the timeStamp folder
     pic = os.path.join(source + "pics")
@@ -211,24 +203,24 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open("./data/mistertemp/" + args.file) as f:
+    with open("./data/mistertemp/" + args.QueriesFiles) as f:
         query = json.load(f)
 
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.workers
     ) as executor:
-        crawl_args = [
+        list = [
             (
                 "https://www.mistertemp.com/espace-recruteur/",
                 entry["city"],
                 entry["service"],
-                args.chromedriver,
+                args.webdriver,
                 res,
                 pic,
             )
             for entry in query
         ]
-        executor.map(crawl_site, crawl_args)
+        executor.map(crawl_site, list)
 
 
 main()
