@@ -1,4 +1,7 @@
 python-slugify
 urllib3==1.23
-selenium===3.141.0
+selenium==3.141.0
 scrapy
+pre-commit
+black
+flake8
