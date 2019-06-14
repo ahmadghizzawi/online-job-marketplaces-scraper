@@ -123,7 +123,7 @@ def main():
     )
     parser.add_argument(
         "-q",
-        "--QueriesFiles",
+        "--Queriesfile",
         type=str,
         metavar="",
         help=" The files containing the queries you wish to work with",
@@ -146,7 +146,7 @@ def main():
     )
     args = parser.parse_args()
 
-    if args.QueriesFiles is None:
+    if args.Queriesfile is None:
         print("No input file passed \nAutomatic crawl mistertemp.com")
         subprocess.call(
             "scrapy crawl cities -o cities.json",
@@ -181,7 +181,7 @@ def main():
         subprocess.call(
             "rm *.json", shell=True, cwd="./src/mistertemp/mistertemp"
         )
-        args.QueriesFiles = "queries.json"
+        args.Queriesfile = "queries.json"
 
     # Creation of the timeStamp folder
     now = datetime.now().isoformat().replace(":", "-")
@@ -190,7 +190,7 @@ def main():
     folder = os.path.join(source1 + timestr)
     if not os.path.exists(folder):
         os.makedirs(folder)
-    source = folder + "/"
+        source = folder + "/"
 
     # Creation of the sub folder pics inside of the timeStamp folder
     pic = os.path.join(source + "pics")
@@ -203,13 +203,13 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open("./data/mistertemp/" + args.QueriesFiles) as f:
+    with open("./data/mistertemp/" + args.Queriesfile) as f:
         query = json.load(f)
 
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.workers
     ) as executor:
-        crawling_args = [
+        crawl_args = [
             (
                 "https://www.mistertemp.com/espace-recruteur/",
                 entry["city"],
@@ -220,7 +220,7 @@ def main():
             )
             for entry in query
         ]
-        executor.map(crawl_site, crawling_args)
+        executor.map(crawl_site, crawl_args)
 
 
 main()
