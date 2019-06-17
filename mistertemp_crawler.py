@@ -10,6 +10,7 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
+from urllib.parse import urlparse
 
 
 def crawl_site(args):
@@ -55,15 +56,20 @@ def crawl_site(args):
         try:
             while True:
                 iteration_number += 1
+                picture = browser.find_element_by_xpath(
+                    '(//div[@class="avatar-container"]/img)['
+                    + str(iteration_number)
+                    + "]"
+                ).get_attribute("src")
+                o = urlparse(picture)
+                name_img = o.path.split("/")[-1]
+
                 worker_dict = {
                     "page": i,
                     "rank": iteration_number,
                     "rating": "",
-                    "picture": browser.find_element_by_xpath(
-                        '(//div[@class="avatar-container"]/img)['
-                        + str(iteration_number)
-                        + "]"
-                    ).get_attribute("src"),
+                    "name_img": name_img,
+                    "picture": picture,
                     "query": slugify(city + "_" + task),
                     "experience_time": browser.find_element_by_xpath(
                         '(//div[@class="xp"])[' + str(iteration_number) + "]"
@@ -81,19 +87,11 @@ def crawl_site(args):
                 except NoSuchElementException:
                     # No rating
                     worker_dict["rating"] = None
+
                 list_workers.append(worker_dict)
                 urllib.request.urlretrieve(
-                    worker_dict["picture"],
-                    pics_path
-                    + "/"
-                    + worker_dict["query"]
-                    + "-"
-                    + str(worker_dict["page"])
-                    + "-"
-                    + str(worker_dict["rank"])
-                    + ".jpg",
+                    worker_dict["picture"], pics_path + "/" + name_img + ".jpg"
                 )
-
         except NoSuchElementException:
             if number_of_pages != 1:
                 browser.find_element_by_class_name("next").click()
