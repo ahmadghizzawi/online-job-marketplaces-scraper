@@ -1,14 +1,20 @@
-from selenium import webdriver
+import argparse
 import json
 import urllib.request
 import time
 import re
 from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
+from selenium import webdriver
 
 
-def get_services(url):
-    browser = webdriver.Chrome("/home/boubou/Stage/chromedriver")
+def get_services(url, chromedriver_path):
+
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+    # Necessary for headless option otherwise the code raises an exception
+    options.add_argument("--window-size=1920,1080")
+    browser = webdriver.Chrome(chromedriver_path, chrome_options=options)
 
     # Load webpage
     browser.get(url)
@@ -51,8 +57,21 @@ def get_services(url):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="mistertemp services crawler")
+    parser.add_argument(
+        "-w",
+        "--webdriver",
+        type=str,
+        metavar="",
+        required=True,
+        help="The PATH of the chromedriver",
+    )
+    args = parser.parse_args()
+
     try:
-        get_services("https://www.mistertemp.com/espace-recruteur/")
+        get_services(
+            "https://www.mistertemp.com/espace-recruteur/", args.webdriver
+        )
     except Exception as error:
         print("Error:", error)
     time.sleep(2)

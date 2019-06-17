@@ -14,7 +14,6 @@ from slugify import slugify
 
 def crawl_site(args):
     url, city, task, chromedriver_path, output_path, pics_path = args
-    # Path to your chromedriver.exe directory
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     # Necessary for headless option otherwise the code raises an exception
@@ -154,7 +153,7 @@ def main():
             cwd="./src/mistertemp/mistertemp/",
         )
         subprocess.call(
-            "python3 get_services.py",
+            "python3 get_services.py -w " + args.webdriver,
             shell=True,
             cwd="./src/mistertemp/mistertemp/",
         )
