@@ -14,17 +14,17 @@ def get_services(url):
     list_jobs = []
     time.sleep(2)
     browser.find_element_by_xpath("//a[@data-toggle='dropdown']").click()
-    time.sleep(3)
+    time.sleep(1)
     parent_categories = browser.find_element_by_css_selector(
         "ul.category-tree.sidebar-filter-options.tree-node.depth-0.last-level"
     )
     main_categories = parent_categories.find_elements_by_tag_name("li")
-    time.sleep(3)
+    time.sleep(1)
     i = 0
     for element in main_categories:
         if i > 0:
             element.find_elements_by_tag_name("a")[0].click()
-            time.sleep(3)
+            time.sleep(2)
             new_parent = browser.find_element_by_css_selector(
                 "ul.tree-node.depth-1.last-level"
             )
@@ -32,7 +32,9 @@ def get_services(url):
             for new_element in new_main:
                 new_element.find_elements_by_tag_name("a")[0].click()
                 time.sleep(2)
-                print(browser.getCurrentUrl())
+                print(browser.current_url)
+                browser.back()
+                time.sleep(5)
         i = 1
 
         time.sleep(3)
