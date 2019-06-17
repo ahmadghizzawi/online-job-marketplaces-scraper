@@ -5,8 +5,12 @@ from selenium import webdriver
 
 
 def get_services(url):
-    browser = webdriver.Chrome("/home/boubou/Stage/chromedriver")
-
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+    options.add_argument("--window-size=1920,1080")
+    browser = webdriver.Chrome(
+        "/home/boubou/Stage/chromedriver", options=options
+    )
     # Load webpage
     browser.get(url)
     browser.implicitly_wait(1)
@@ -19,25 +23,26 @@ def get_services(url):
         "ul.category-tree.sidebar-filter-options.tree-node.depth-0.last-level"
     )
     main_categories = parent_categories.find_elements_by_tag_name("li")
-    time.sleep(1)
-    i = 0
-    for element in main_categories:
-        if i > 0:
-            element.find_elements_by_tag_name("a")[0].click()
-            time.sleep(2)
-            new_parent = browser.find_element_by_css_selector(
-                "ul.tree-node.depth-1.last-level"
+    list_url1 = []
+    for element in main_categories[1::]:
+        list_url1.append(
+            element.find_elements_by_tag_name("a")[0].get_attribute("href")
+        )
+    for urls in list_url1:
+        browser.get(urls)
+        new_parent = browser.find_element_by_css_selector(
+            "ul.tree-node.depth-1.last-level"
+        )
+        new_main = new_parent.find_elements_by_tag_name("li")
+        for new_element in new_main:
+            list_jobs.append(
+                {
+                    "url": new_element.find_elements_by_tag_name("a")[
+                        0
+                    ].get_attribute("href")
+                }
             )
-            new_main = new_parent.find_elements_by_tag_name("li")
-            for new_element in new_main:
-                new_element.find_elements_by_tag_name("a")[0].click()
-                time.sleep(2)
-                print(browser.current_url)
-                browser.back()
-                time.sleep(5)
-        i = 1
 
-        time.sleep(3)
     # put jobs list in json file
     with open("services.json", "w") as services:
         json.dump(list_jobs, services, ensure_ascii=False)
