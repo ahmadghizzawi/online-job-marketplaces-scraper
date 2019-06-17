@@ -28,6 +28,12 @@ You will need to run the following command:
 
 `python Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
 
+For instance:
+
+`python Taskrabbit_crawler.py -w /home/boubou/online-job-marketplaces-scraper/chromedriver -q queries.json -t 5`
+
+would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the data/mistertemp folder. It would also use 5 threads and the output folder would be the default ouput folder which is dataset/mistertemp.
+
 ## MisterTemp
 The TaskRabbit scraper was written in June 2019.
 
@@ -38,7 +44,7 @@ In order to run mistertemp_crawler.py you need to execute the following command:
 `
 
 mistertemp_crawler.py has one more parameter than taskrabbit_crawler.py.add
-Threads option: The MisterTemp crawler uses only one thread originilay. To increase the speed of the computation choose the number of threads the program will use with the attribute -t
+Threads option: The MisterTemp crawler uses only one thread by default. To increase the speed of the computation choose the number of threads the program will use with the attribute -t
 
 
 ## Results 
@@ -49,3 +55,5 @@ in this folder you will find the time stamp folder created when you launched the
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
 
 Sultan Mourthadhoi (sultan.mourthadhoi@etu.univ-grenoble-alpes.fr)
+
+Yann Bourreau (yann.bourreau@gmail.com)

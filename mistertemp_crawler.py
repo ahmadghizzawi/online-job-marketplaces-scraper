@@ -204,7 +204,7 @@ def main():
         os.makedirs(res)
 
     with open("./data/mistertemp/" + args.Queriesfile) as f:
-        query = json.load(f)
+        queries = json.load(f)
 
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.workers
@@ -218,7 +218,7 @@ def main():
                 res,
                 pic,
             )
-            for entry in query
+            for entry in queries
         ]
         executor.map(crawl_site, crawl_args)
 
