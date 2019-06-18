@@ -4,53 +4,97 @@ for research purposes. The way scraping is conducted is similar across all platf
 queries where a query is a combination of parameters that yield a ranked list of users. For example, in TaskRabbit's 
 case that would be a combination of a location and service type, i.e. _Home Cleaners in New York_.
 
-## Requirements
+## Setup
+### Requirements
 - Python 3.x: https://www.anaconda.com/distribution/ 
 - ChromeDriver v < 73: https://chromedriver.storage.googleapis.com/index.html?path=2.46/
 
 ### Dependencies
-`pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
+
+### Precommit Hooks
+```bash
+pre-commit install
+```
+
+#### Automated Linting and static code checking pipeline
+Read more here: https://ljvmiranda921.github.io/notebook/2018/06/21/precommits-using-black-and-flake8/
+![alt text](https://ljvmiranda921.github.io/assets/png/tuts/precommit_pipeline.png)
 
 ## TaskRabbit
-The TaskRabbit scraper was written in November 2018. Therefore, you might have to do some changes before scraping
+The TaskRabbit scraper was written in *June 2019*. Therefore, you might have to do some changes before scraping
 depending on how severe the changes are. 
 
 ### Crawl TaskRabbit
 In order to run taskrabbit_crawler.py you need to execute the following command:
-`python Taskrabbit_crawler.py -w webDriver -q queriesFiles `
 
-webDriver option: in the webDriver option you need to provide the path to your chrome driver that you downloaded earlier. This parameter is required in order to execute the script 
+```bash
+usage: taskrabbit_crawler.py [-h] -w  [-q] [-o] [-b] [-e]
 
-queriesFiles option: will be the queries json file containing an id, task_title, city and a url. It needs to be placed in ./data/taskrabbit , in case you didn't provide an attribute for -f the crawler will generate a new queries file with the help of the spider where it default name will be final_queries.json
+taskrabbit crawler
 
-output option: the default output folder is ./datasets/taskrabbit/ . In case you want to change the output folder you need to create manually the folder in which you want to save the results and then pass the folder path with -o option.
-You will need to run the following command:
+optional arguments:
+  -h, --help       show this help message and exit
+  -w , --web       The path to your chrome web driver
+  -q , --queries   The files containing the queries you wish to work with
+  -o , --output    The output directory containing the results, pics and the
+                   failed queries
+  -b , --beg       The beginning point of the query file
+  -e , --end       ending point of the query file
 
-`python Taskrabbit_crawler.py -w webDriver -q queriesFiles -o output`
+```
 
-For instance:
+#### Example
 
-`python Taskrabbit_crawler.py -w /home/boubou/online-job-marketplaces-scraper/chromedriver -q queries.json -t 5`
+```bash
+python taskrabbit_crawler.py -w ./chromedriver -q queries.json 
+```
 
-would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the data/mistertemp folder. It would also use 5 threads and the output folder would be the default ouput folder which is dataset/mistertemp.
+would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the 
+data/taskrabbit folder. The output folder would be the default ouput folder which is 
+dataset/taskrabbit.
 
 ## MisterTemp
-The TaskRabbit scraper was written in June 2019.
+MisterTemp scraper was written in *June 2019*. Therefore, you might have to do some changes before scraping
+depending on how severe the changes are. 
 
 ### Crawl MisterTemp
 In order to run mistertemp_crawler.py you need to execute the following command:
 
-`python mistertemp.py.py -w webDriver -q queriesFiles 
-`
+```bash
+mistertemp crawler
 
-mistertemp_crawler.py has one more parameter than taskrabbit_crawler.py.add
-Threads option: The MisterTemp crawler uses only one thread by default. To increase the speed of the computation choose the number of threads the program will use with the attribute -t
+optional arguments:
+  -h, --help           show this help message and exit
+  -w , --webdriver     The PATH of the chromedriver
+  -q , --queriesfile   The files containing the queries you wish to work with
+  -o , --output        The output directory containing the results, and pics 
+  -t , --workers       The number of threads you want to use
 
+```
+#### Example
+```bash
+python mistertemp_crawler.py -w ./chromedriver -q queries.json -t 5
+```
+
+would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the 
+data/mistertemp folder. It would also use 5 threads and the output folder would be the default ouput folder which is 
+dataset/mistertemp.
 
 ## Results 
-You can find the results of taskrabbit_crawler.py in ./datasets/taskrabbit/
-in this folder you will find the time stamp folder created when you launched the scripts (format Year-Months_DayTHour-Min-Sec). Inside that folder there will be one folder named pics containing the pics crawled by the queries and a results folder containing the results of the differents json file for each successful query. Finally you will find also a json file named failed_queries.json containing the unsuccessful query
-
+```
+└── datasets
+    ├── mistertemp
+    │   └── 2019-06-05T16-46-32
+    │       ├── pics
+    │       └── results
+    └── taskrabbit
+        └── 2019-06-05T16-46-32
+            ├── pics
+            └── results    
+```
 # Authors
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
 

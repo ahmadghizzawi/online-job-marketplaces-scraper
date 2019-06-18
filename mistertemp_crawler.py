@@ -120,7 +120,7 @@ def main():
     )
     parser.add_argument(
         "-q",
-        "--Queriesfile",
+        "--queriesfile",
         type=str,
         metavar="",
         help=" The files containing the queries you wish to work with",
@@ -143,7 +143,7 @@ def main():
     )
     args = parser.parse_args()
 
-    if args.Queriesfile is None:
+    if args.queriesfile is None:
         print("No input file passed \nAutomatic crawl mistertemp.com")
         subprocess.call(
             "scrapy crawl cities -o cities.json",
@@ -178,7 +178,7 @@ def main():
         subprocess.call(
             "rm *.json", shell=True, cwd="./src/mistertemp/mistertemp"
         )
-        args.Queriesfile = "queries.json"
+        args.queriesfile = "queries.json"
 
     # Creation of the timeStamp folder
     now = datetime.now().isoformat().replace(":", "-")
@@ -200,7 +200,7 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open("./data/mistertemp/" + args.Queriesfile) as f:
+    with open("./data/mistertemp/" + args.queriesfile) as f:
         queries = json.load(f)
 
     with concurrent.futures.ThreadPoolExecutor(
