@@ -38,12 +38,11 @@ taskrabbit crawler
 optional arguments:
   -h, --help       show this help message and exit
   -w , --web       The path to your chrome web driver
-  -q , --queries   The files containing the queries you wish to work with
+  -q , --queries   The path to the file containing the queries you wish to
+                   work with
   -o , --output    The output directory containing the results, pics and the
                    failed queries
-  -b , --beg       The beginning point of the query file
-  -e , --end       ending point of the query file
-
+  -t , --threads   The number of threads you want to work with
 ```
 
 #### Example
