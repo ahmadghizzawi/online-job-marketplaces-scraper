@@ -5,14 +5,16 @@ import re
 import subprocess
 import time
 import urllib.request
-from datetime import datetime
+import concurrent.futures
 
+from datetime import datetime
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
 
 
-def crawl_site(url, city, task, driver_path, output_path, pics_path):
+def crawl_site(args):
+    url, city, task, driver_path, output_path, pics_path = args
     # Path to your chromedriver.exe directory
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
@@ -235,15 +237,14 @@ def crawl_site(url, city, task, driver_path, output_path, pics_path):
 
 def main():
     parser = argparse.ArgumentParser(description='taskrabbit crawler')
-    parser.add_argument('-w', '--web', type=str, metavar='', help=' The path to your chrome web driver', required=True)
+    parser.add_argument('-w', '--web', type=str, metavar='', required=True,
+                        help=' The path to your chrome web driver')
     parser.add_argument('-q', '--queries', type=str, metavar='',
                         help=' The files containing the queries you wish to work with')
     parser.add_argument('-o', '--output', type=str, metavar='', default='./datasets/taskrabbit/',
                         help='The output directory containing the results, pics and the failed queries')
-    parser.add_argument('-b', '--beg',type=int, metavar='',default=0,
-                        help='The beginning point of the query file')
-    parser.add_argument('-e', '--end', type=int, metavar='',default=10000,
-                        help='ending point of the query file')
+    parser.add_argument('-t', '--threads',type=int, metavar='',default=1,
+                        help='The number of threads you want to work with')
 
     args = parser.parse_args()
 
@@ -278,7 +279,7 @@ def main():
                         cwd='./src/Taskrabbit/')
         # removing all of the json file left in src folder
         subprocess.call('rm *.json', shell=True, cwd='./src/Taskrabbit/')
-        args.queries = 'final_queries.json'
+        args.queries = './data/taskrabbit/final_queries.json'
 
     # Creation of the timeStamp folder
     now = datetime.now().isoformat().replace(':', '-')
@@ -300,22 +301,16 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open('./data/taskrabbit/' + args.queries) as f:
+    with open(args.queries) as f:
         entries = json.load(f)
     
     failed = []
-    # check if the entries values are inside the range of the file
-    if(args.beg < 0 or args.end > len(entries)):
-        args.beg = 0
-        args.end = len(entries)
-        print("entries changed to their default values ")
 
     # Counter used to know the number of query 
-    counter = args.beg
-    nb_queries = (args.end - args.beg)
-    print('Crawling queries from', args.beg, 'to', args.end)
-    for entry in entries[args.beg: args.end + 1]:
-        print('Running query #', counter, 'out of', nb_queries, 'queries')
+    counter = 1
+    list_args =[]
+    for entry in entries:
+        print('Running query #', counter, 'out of', len(entries), 'queries')
         try:
             if entry['city'].endswith('UK'):
                 # UK cities, UK taskrabbit
@@ -327,16 +322,18 @@ def main():
                 # USA taskrabbit
                 website = 'https://www.taskrabbit.com'
             # List of attrbute for crawl_site fonction
-            crawl_site(website + entry['url'], entry['city'], entry['task_title'], args.web, res, pic)
+            list_args.append((website + entry['url'], entry['city'], entry['task_title'], args.web, res, pic))
         except Exception as error:
             print('query #', counter, 'failed.')
             print('Error:', error)
             failed.append(entry)
         counter += 1
-        time.sleep(5)
         with open(folder + '/failed_queries.json', 'w') as f:
             json.dump(failed, f)
-
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers = 3
+        ) as executor:
+            executor.map=(crawl_site,list_args)
 
 
 if __name__ == "__main__":
