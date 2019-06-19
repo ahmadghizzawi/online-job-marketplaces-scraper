@@ -31,7 +31,7 @@ depending on how severe the changes are.
 In order to run taskrabbit_crawler.py you need to execute the following command:
 
 ```bash
-usage: taskrabbit_crawler.py [-h] -w  [-q] [-o] [-b] [-e]
+usage: taskrabbit_crawler.py [-h] -w  [-q] [-o] [-t]
 
 taskrabbit crawler
 
