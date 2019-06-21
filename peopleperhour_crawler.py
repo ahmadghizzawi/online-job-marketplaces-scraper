@@ -162,7 +162,7 @@ def main():
         (
             entry["city"],
             entry["service"],
-            # url,
+            entry["url"],
             args.webdriver,
             res,
             pic,
