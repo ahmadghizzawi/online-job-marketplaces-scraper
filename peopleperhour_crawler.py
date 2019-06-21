@@ -5,17 +5,16 @@ import re
 import subprocess
 import time
 import urllib.request
-from datetime import datetime
+import concurrent.futures
 
+from datetime import datetime
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
 
 
-def crawl_site(city, url, driver_path, task, output_path):
-    # Path to your chromedriver.exe directory
-    options = webdriver.ChromeOptions()
-    browser = webdriver.Chrome(driver_path, options=options)
+def crawl_site(args, browser, browser_is_not_used, j):
+    url, city, task, chromedriver_path, output_path, pics_path = args
     # Load webpage
     browser.get(url)
     browser.implicitly_wait(1)
@@ -67,6 +66,7 @@ def crawl_site(city, url, driver_path, task, output_path):
         worker = {
             "city": city,
             "rating": "",
+            # "service": service,
             "language": [
                 element.text
                 for element in browser.find_element_by_css_selector(
@@ -91,17 +91,112 @@ def crawl_site(city, url, driver_path, task, output_path):
         json.dump(list_workers, fout)
 
     # Query finished close the browser
-    browser.close()
 
 
 def main():
-    crawl_site(
-        "Mumbai",
-        "https://www.peopleperhour.com/hire-freelancers/designers/3d-artist",
-        "/home/boubou/Stage/chromedriver",
-        "task_name",
-        "./datasets/peopleperhour/",
+    parser = argparse.ArgumentParser(description="peopleperhour crawler")
+    parser.add_argument(
+        "-w",
+        "--webdriver",
+        type=str,
+        metavar="",
+        required=True,
+        help="The PATH of the chromedriver",
     )
+    parser.add_argument(
+        "-q",
+        "--queriesfile",
+        type=str,
+        metavar="",
+        help=" The files containing the queries you wish to work with",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        metavar="",
+        default="./datasets/peopleperhour/",
+        help="The output directory containing the results, pics and the failed queries",
+    )
+    parser.add_argument(
+        "-t",
+        "--threads",
+        type=int,
+        metavar="",
+        default=1,
+        help="The number of threads you want to use",
+    )
+    args = parser.parse_args()
+
+    if args.queriesfile is None:
+        print("No input file passed \nAutomatic crawl peopleperhour.com")
+        """
+        TODO
+        """
+        args.queriesfile = "queries.json"
+
+    # Creation of the timeStamp folder
+    now = datetime.now().isoformat().replace(":", "-")
+    timestr = str(now)
+    source1 = args.output
+    folder = os.path.join(source1 + timestr)
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+        source = folder + "/"
+
+    # Creation of the sub folder pics inside of the timeStamp folder
+    pic = os.path.join(source + "pics")
+    if not os.path.exists(pic):
+        os.makedirs(pic)
+
+    # Creation of the sub folder results inside of the timeStamp folder
+    source2 = folder + "/"
+    res = os.path.join(source2 + "results")
+    if not os.path.exists(res):
+        os.makedirs(res)
+
+    with open("./data/peopleperhour/" + args.queriesfile) as f:
+        queries = json.load(f)
+
+    crawl_args = [
+        (
+            entry["city"],
+            entry["service"],
+            # url,
+            args.webdriver,
+            res,
+            pic,
+        )
+        for entry in queries
+    ]
+
+    browsers = []
+    crawl_args.reverse()
+    browser_is_not_used = [True for i in range(args.workers)]
+    for j in range(args.workers):
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        # Necessary for headless option otherwise the code raises an exception
+        options.add_argument("--window-size=1920,1080")
+        # Path to your chromedriver.exe directory
+        browsers.append(
+            webdriver.Chrome(args.webdriver, chrome_options=options)
+        )
+
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=args.workers
+    ) as executor:
+        while len(crawl_args) > 0:
+            for j in range(args.workers):
+                if browser_is_not_used[j]:
+                    browser_is_not_used[j] = False
+                    executor.submit(
+                        crawl_site,
+                        crawl_args.pop(),
+                        browsers[j],
+                        browser_is_not_used,
+                        j,
+                    )
 
 
 main()
