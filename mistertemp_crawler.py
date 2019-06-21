@@ -5,6 +5,7 @@ import subprocess
 import time
 import urllib.request
 import concurrent.futures
+import psutil
 
 from datetime import datetime
 from selenium import webdriver
@@ -13,14 +14,8 @@ from slugify import slugify
 from urllib.parse import urlparse
 
 
-def crawl_site(args):
+def crawl_site(args, browser, browser_is_not_used, j):
     url, city, task, chromedriver_path, output_path, pics_path = args
-    options = webdriver.ChromeOptions()
-    options.add_argument("headless")
-    # Necessary for headless option otherwise the code raises an exception
-    options.add_argument("--window-size=1920,1080")
-    # Path to your chromedriver.exe directory
-    browser = webdriver.Chrome(chromedriver_path, chrome_options=options)
     # Load webpage
     browser.get(url)
     browser.implicitly_wait(1)
@@ -31,10 +26,10 @@ def crawl_site(args):
     browser.find_element_by_xpath("//input[@placeholder='Ville']").send_keys(
         city
     )
-    time.sleep(1)
+    browser.implicitly_wait(1)
     browser.find_element_by_css_selector("button").click()
 
-    time.sleep(1)
+    browser.implicitly_wait(2)
     browser.find_element_by_class_name("filter-checkbox-photo-video").click()
     time.sleep(1)
     list_workers = []
@@ -105,7 +100,7 @@ def crawl_site(args):
     ) as fout:
         json.dump(list_workers, fout)
 
-    browser.close()
+    browser_is_not_used[j] = True
 
 
 def main():
@@ -120,7 +115,7 @@ def main():
     )
     parser.add_argument(
         "-q",
-        "--queriesfile",
+        "--Queriesfile",
         type=str,
         metavar="",
         help=" The files containing the queries you wish to work with",
@@ -143,7 +138,7 @@ def main():
     )
     args = parser.parse_args()
 
-    if args.queriesfile is None:
+    if args.Queriesfile is None:
         print("No input file passed \nAutomatic crawl mistertemp.com")
         subprocess.call(
             "scrapy crawl cities -o cities.json",
@@ -178,7 +173,7 @@ def main():
         subprocess.call(
             "rm *.json", shell=True, cwd="./src/mistertemp/mistertemp"
         )
-        args.queriesfile = "queries.json"
+        args.Queriesfile = "queries.json"
 
     # Creation of the timeStamp folder
     now = datetime.now().isoformat().replace(":", "-")
@@ -200,24 +195,48 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open("./data/mistertemp/" + args.queriesfile) as f:
+    with open("./data/mistertemp/" + args.Queriesfile) as f:
         queries = json.load(f)
+
+    crawl_args = [
+        (
+            "https://www.mistertemp.com/espace-recruteur/",
+            entry["city"],
+            entry["service"],
+            args.webdriver,
+            res,
+            pic,
+        )
+        for entry in queries
+    ]
+
+    browsers = []
+    crawl_args.reverse()
+    browser_is_not_used = [True for i in range(args.workers)]
+    for j in range(args.workers):
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        # Necessary for headless option otherwise the code raises an exception
+        options.add_argument("--window-size=1920,1080")
+        # Path to your chromedriver.exe directory
+        browsers.append(
+            webdriver.Chrome(args.webdriver, chrome_options=options)
+        )
 
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.workers
     ) as executor:
-        crawl_args = [
-            (
-                "https://www.mistertemp.com/espace-recruteur/",
-                entry["city"],
-                entry["service"],
-                args.webdriver,
-                res,
-                pic,
-            )
-            for entry in queries
-        ]
-        executor.map(crawl_site, crawl_args)
+        while len(crawl_args) > 0:
+            for j in range(args.workers):
+                if browser_is_not_used[j]:
+                    browser_is_not_used[j] = False
+                    executor.submit(
+                        crawl_site,
+                        crawl_args.pop(),
+                        browsers[j],
+                        browser_is_not_used,
+                        j,
+                    )
 
 
 main()
