@@ -17,7 +17,7 @@ failed_queries = []
 counter = 1
 
 
-def cookies(element):
+def hide_cookies_banner(element):
     if element.is_displayed():
         element.click()
     else:
@@ -84,7 +84,7 @@ def crawl_site(args):
     element = browser.find_element_by_css_selector(
         ".js__cookie-banner-dismiss"
     )
-    cookies(element)
+    hide_cookies_banner(element)
 
     # # Click on the first task type
     # browser.find_element_by_css_selector('#metro-templates
