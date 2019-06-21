@@ -13,10 +13,6 @@ from selenium.common.exceptions import NoSuchElementException
 from slugify import slugify
 
 
-failed_queries = []
-counter = 1
-
-
 def hide_cookies_banner(element):
     if element.is_displayed():
         element.click()
@@ -71,7 +67,9 @@ def reviews_retiever(browser, worker_dict, next_page):
 
 
 def crawl_site(args):
-    url, city, task, driver_path, output_path, pics_path, entry, total = args
+    url, city, task, driver_path, output_path, pics_path, entry, total, failed_queries, counter = (
+        args
+    )
     # Path to your chromedriver.exe directory
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
@@ -325,13 +323,12 @@ def crawl_site(args):
 
 
 def crawl_site_aux(args):
-    global failed_queries
-    global counter
-    url, city, task, driver_path, output_path, pics_path, entry, total = args
+    url, city, task, driver_path, output_path, pics_path, entry, total, failed_queries, counter = (
+        args
+    )
     try:
         print("Running query #", counter, "out of", total, "queries")
         counter_failed = counter
-        counter += 1
         crawl_site(args)
     except Exception as error:
         print("query #", counter_failed, "failed.")
@@ -465,8 +462,9 @@ def main():
         entries = json.load(f)
 
     # Counter used to know the number of query
-    global failed_queries
+    failed_queries = []
     list_args = []
+    counter = 1
     for entry in entries:
         if entry["city"].endswith("UK"):
             # UK cities, UK taskrabbit
@@ -488,8 +486,11 @@ def main():
                 pic,
                 entry,
                 len(entries),
+                failed_queries,
+                counter,
             )
         )
+        counter += 1
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.threads
     ) as executor:
