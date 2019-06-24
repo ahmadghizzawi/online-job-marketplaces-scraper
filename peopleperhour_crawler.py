@@ -16,13 +16,19 @@ from slugify import slugify
 def crawl_site(args, browser, browser_is_not_used, j):
     url, city, task, chromedriver_path, output_path, pics_path = args
     # Load webpage
+
     browser.get(url)
     browser.implicitly_wait(1)
-
-    element = browser.find_element_by_css_selector(
-        "div.pull-right.drop-filters-trigger"
-    )
-    element.find_elements_by_tag_name("a")[0].click()
+    try:
+        element = browser.find_element_by_css_selector(
+            "div.pull-right.drop-filters-trigger"
+        )
+        element.find_elements_by_tag_name("a")[0].click()
+    except NoSuchElementException:
+        element = browser.find_element_by_css_selector("ul.filters__list")
+        element.find_elements_by_tag_name("li")[3].find_elements_by_tag_name(
+            "a"
+        )[0].click()
     suite = browser.find_elements_by_xpath('//input[@id="location-input"]')[0]
     suite.send_keys(city)
     chopper_list = browser.find_elements_by_css_selector(
@@ -75,7 +81,15 @@ def crawl_site(args, browser, browser_is_not_used, j):
             ],
             "rank": ranking,
             "number_of_project": "",
+            "picture": browser.find_elements_by_xpath(
+                '//div[@class="profile-pic"]/img'
+            )[0].get_attribute("src"),
+            "id": browser.find_element_by_class_name("action-buttons-inner")
+            .find_elements_by_tag_name("a")[0]
+            .get_attribute("href")
+            .split("=")[1],
         }
+        print(worker["id"])
         ranking += 1
         try:
             worker["rating"] = browser.find_element_by_class_name(
@@ -84,7 +98,10 @@ def crawl_site(args, browser, browser_is_not_used, j):
         except NoSuchElementException:
             worker["rating"] = None
         list_workers.append(worker)
-    print(list_workers)
+        urllib.request.urlretrieve(
+            worker["picture"], pics_path + "/" + worker["id"] + ".jpg"
+        )
+
     with open(
         output_path + "/" + slugify(city + "-" + task) + ".json", "w"
     ) as fout:
@@ -155,27 +172,20 @@ def main():
     if not os.path.exists(res):
         os.makedirs(res)
 
-    with open("./data/peopleperhour/" + args.queriesfile) as f:
+    with open("./data/peoplePerHour/" + args.queriesfile) as f:
         queries = json.load(f)
 
     crawl_args = [
-        (
-            entry["city"],
-            entry["service"],
-            entry["url"],
-            args.webdriver,
-            res,
-            pic,
-        )
+        (entry["url"], entry["city"], entry["task"], args.webdriver, res, pic)
         for entry in queries
     ]
 
     browsers = []
     crawl_args.reverse()
-    browser_is_not_used = [True for i in range(args.workers)]
-    for j in range(args.workers):
+    browser_is_not_used = [True for i in range(args.threads)]
+    for j in range(args.threads):
         options = webdriver.ChromeOptions()
-        options.add_argument("headless")
+        # options.add_argument("headless")
         # Necessary for headless option otherwise the code raises an exception
         options.add_argument("--window-size=1920,1080")
         # Path to your chromedriver.exe directory
@@ -184,10 +194,10 @@ def main():
         )
 
     with concurrent.futures.ThreadPoolExecutor(
-        max_workers=args.workers
+        max_workers=args.threads
     ) as executor:
         while len(crawl_args) > 0:
-            for j in range(args.workers):
+            for j in range(args.threads):
                 if browser_is_not_used[j]:
                     browser_is_not_used[j] = False
                     executor.submit(
@@ -200,3 +210,7 @@ def main():
 
 
 main()
+
+# Star-b481b4de4ede69a041179a971f82eb0d
+# Star-b481b4de4ede69a041179a971f82eb0d
+# Star-dcfdd3ecaa5e46803528211ce1167dad
