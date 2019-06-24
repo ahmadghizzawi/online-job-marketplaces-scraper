@@ -7,11 +7,11 @@ from typing import List
 
 class RankingItem:
     """
-        Represent a single worker in a ranked list of workers.
+    Represent a single worker in a ranked list of workers.
     """
     def __init__(self, item_id: str, picture_url: str, rank: int, metadata: dict=None):
         """
-        :param id: ranking item id. Should be some unique identifier for the item in the list
+        :param item_id: ranking item id. Should be some unique identifier for the item in the list
                     crawled item. For example, in TaskRabbit, this would be the worker id.
         :param picture_url: the URL of the worker's picture.
         :param rank: the rank of the worker in the ranking list.
