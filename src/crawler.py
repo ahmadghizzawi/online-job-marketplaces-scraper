@@ -11,8 +11,8 @@ class RankingItem:
     """
     def __init__(self, item_id: str, picture_url: str, rank: int, metadata: dict=None):
         """
-        :param item_id: ranking item id. Should be some unique identifier for the item in the list
-                    crawled item. For example, in TaskRabbit, this would be the worker id.
+        :param item_id: ranking item id. Should be some unique identifier for the item
+                        in the list crawled item. For example, in TaskRabbit, this would be the worker id.
         :param picture_url: the URL of the worker's picture.
         :param rank: the rank of the worker in the ranking list.
         :param metadata: a dictionary of any other crawled information about the ranking item.
