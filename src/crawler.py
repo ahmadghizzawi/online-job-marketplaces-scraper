@@ -9,15 +9,15 @@ class RankingItem:
     """
         Represent a single worker in a ranked list of workers.
     """
-    def __init__(self, id: str, picture_url: str, rank: int, metadata: dict=None):
+    def __init__(self, item_id: str, picture_url: str, rank: int, metadata: dict=None):
         """
-        :param id: ranking item id. Should be some unique identifier for the item in the list crawled item. For example,
-                   in TaskRabbit, this would be the worker id.
+        :param id: ranking item id. Should be some unique identifier for the item in the list
+                    crawled item. For example, in TaskRabbit, this would be the worker id.
         :param picture_url: the URL of the worker's picture.
         :param rank: the rank of the worker in the ranking list.
         :param metadata: a dictionary of any other crawled information about the ranking item.
         """
-        self.id = id
+        self.id = item_id
         self.picture_url = picture_url
         self.rank = rank
         self.metadata = {} if metadata is None else metadata
