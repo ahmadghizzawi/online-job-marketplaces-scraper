@@ -26,10 +26,10 @@ def crawl_site(args, browser, browser_is_not_used, j):
     browser.find_element_by_xpath("//input[@placeholder='Ville']").send_keys(
         city
     )
-    browser.implicitly_wait(1)
+    browser.sleep(1)
     browser.find_element_by_css_selector("button").click()
 
-    browser.implicitly_wait(2)
+    browser.sleep(2)
     browser.find_element_by_class_name("filter-checkbox-photo-video").click()
     time.sleep(1)
     list_workers = []
