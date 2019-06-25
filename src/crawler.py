@@ -1,8 +1,10 @@
+import json
+from typing import List
 from abc import ABC, abstractmethod
+
 from selenium import webdriver
 from slugify import slugify
 from selenium.webdriver import ChromeOptions
-from typing import List
 
 
 class RankingItem:
@@ -22,6 +24,17 @@ class RankingItem:
         self.rank = rank
         self.metadata = {} if metadata is None else metadata
 
+
+class RankingItemEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, RankingItem):
+            return {
+                'id': o.id,
+                'picture_url': o.picture_url,
+                'rank': o.rank,
+                'metadata': o.metadata
+            }
+        return RankingItemEncoder(self, o)
 
 class Query:
     def __init__(self, url: str, title: str, city: str, country: str=None, id=None):
@@ -79,11 +92,5 @@ class OJMCrawler(ABC):
         Crawls the given query from a platform. Must return a list of RankingItem.
 
         :return: list of ranking items that were crawled
-        """
-        raise NotImplementedError
-
-    def exit(self):
-        """
-        Cleans up post-crawling. It's usage is still pending.
         """
         raise NotImplementedError
