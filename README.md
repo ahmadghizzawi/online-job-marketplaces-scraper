@@ -83,7 +83,7 @@ optional arguments:
 python run_crawler.py -p mistertemp -w ./chromedriver -q data/mistertemp/queries.json
 ```
 
-would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the
+would grab the chromedriver placed in the main folder and use the queries placed in the
 data/mistertemp folder.
 
 ## Results
@@ -100,7 +100,7 @@ data/mistertemp folder.
 ```
 
 ## Failed queries
-Failes queries are put in a json file : "failed_queries.json" which is located in the timestamp folder which contains the results ans pics folders.
+Failes queries are put in a json file : `failed_queries.json` which is located in the timestamp folder which contains the results ans pics folders.
 
 # Authors
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
