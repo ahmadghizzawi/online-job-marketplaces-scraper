@@ -11,7 +11,10 @@ class RankingItem:
     """
     Represent a single worker in a ranked list of workers.
     """
-    def __init__(self, item_id: str, picture_url: str, rank: int, metadata: dict=None):
+
+    def __init__(
+        self, item_id: str, picture_url: str, rank: int, metadata: dict = None
+    ):
         """
         :param item_id: ranking item id. Should be some unique identifier for the item
                         in the list crawled item. For example, in TaskRabbit, this would be the worker id.
@@ -29,16 +32,18 @@ class RankingItemEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, RankingItem):
             return {
-                'id': o.id,
-                'picture_url': o.picture_url,
-                'rank': o.rank,
-                'metadata': o.metadata
+                "id": o.id,
+                "picture_url": o.picture_url,
+                "rank": o.rank,
+                "metadata": o.metadata,
             }
         return RankingItemEncoder(self, o)
 
 
 class Query:
-    def __init__(self, url: str, title: str, city: str, country: str=None, id=None):
+    def __init__(
+        self, url: str, title: str, city: str, country: str = None, id=None
+    ):
         """
         :param url: url of the query.
         :param title: title of the query. In TaskRabbit, this would be Home Cleaning for example.
@@ -52,7 +57,7 @@ class Query:
         self.country = country
 
         if id is None:
-            self.id = slugify(title + '-' + city)
+            self.id = slugify(title + "-" + city)
         else:
             self.id = id
 
@@ -61,11 +66,11 @@ class QueryEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, Query):
             return {
-                'id': o.id,
-                'url': o.url,
-                'title': o.title,
-                'city': o.city,
-                'country': o.country
+                "id": o.id,
+                "url": o.url,
+                "title": o.title,
+                "city": o.city,
+                "country": o.country,
             }
         return QueryEncoder(self, o)
 
@@ -74,7 +79,10 @@ class OJMCrawler(ABC):
     """
     Online job marketplace crawler abstract class.
     """
-    def __init__(self, query: Query, chromedriver_path, options: ChromeOptions=None):
+
+    def __init__(
+        self, query: Query, chromedriver_path, options: ChromeOptions = None
+    ):
         """
         :param query: query to be crawled
         :param chromedriver_path: path of the chrome driver
@@ -108,3 +116,6 @@ class OJMCrawler(ABC):
         :return: list of ranking items that were crawled
         """
         raise NotImplementedError
+
+    def exit(self):
+        self.browser.close()
