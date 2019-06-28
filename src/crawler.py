@@ -36,6 +36,7 @@ class RankingItemEncoder(json.JSONEncoder):
             }
         return RankingItemEncoder(self, o)
 
+
 class Query:
     def __init__(self, url: str, title: str, city: str, country: str=None, id=None):
         """
@@ -54,6 +55,19 @@ class Query:
             self.id = slugify(title + '-' + city)
         else:
             self.id = id
+
+
+class QueryEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Query):
+            return {
+                'id': o.id,
+                'url': o.url,
+                'title': o.title,
+                'city': o.city,
+                'country': o.country
+            }
+        return QueryEncoder(self, o)
 
 
 class OJMCrawler(ABC):
