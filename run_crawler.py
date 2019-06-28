@@ -70,9 +70,9 @@ def main():
             failed.append(query)
             print(e)
             crawler.exit()
-
     with open(folder_path + "/failed_queries.json", "w") as f:
         json.dump(failed, f, cls=QueryEncoder)
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -41,7 +41,9 @@ def create_output_folders(output_path):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="parser")
+    parser = argparse.ArgumentParser(
+        description="Online job marketplaces crawler"
+    )
     parser.add_argument(
         "-p",
         "--platform",
