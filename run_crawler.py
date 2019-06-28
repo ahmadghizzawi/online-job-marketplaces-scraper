@@ -5,7 +5,6 @@ import subprocess
 import time
 import urllib.request
 import concurrent.futures
-import psutil
 import sys
 import asyncio
 import threading
@@ -40,9 +39,7 @@ def main():
 
     list_query = [
         Query(
-            get_url(args.platform, args.queriesfile),
-            entry["service"],
-            entry["city"],
+            get_url(args.platform, entry), entry["task_title"], entry["city"]
         )
         for entry in entries
     ]

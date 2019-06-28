@@ -5,7 +5,6 @@ import subprocess
 import time
 import urllib.request
 import concurrent.futures
-import psutil
 import sys
 import asyncio
 import threading
@@ -60,4 +59,61 @@ def get_queries_mistertemp(args):
 
 
 def get_queries_taskrabbit(args):
-    print("TO DO")
+    scrapy_project_path = "./src/Taskrabbit/spider/Taskrabbit/"
+    print("No input file passed \nAutomatic crawl Taskrabbit.com")
+    # crawling of the taskrabbit cities from the scrapy path
+    subprocess.call(
+        "scrapy crawl cities -o cities.json",
+        shell=True,
+        cwd=scrapy_project_path,
+    )
+    # moving the cities file to the correct folder for the next step
+    subprocess.call(
+        "mv cities.json ./../../cities.json",
+        shell=True,
+        cwd=scrapy_project_path,
+    )
+    # cleaning and removing duplicate from cities.json
+    subprocess.call(
+        "python3 clean_cities.py", shell=True, cwd="./src/Taskrabbit/"
+    )
+    # copying the final and clean city file to the data folder
+    subprocess.call(
+        "cp final_cities.json ./../../data/taskrabbit/final_cities.json",
+        shell=True,
+        cwd="./src/Taskrabbit/",
+    )
+    # crawling the list of all the task available
+    subprocess.call(
+        "scrapy crawl allqueries -o allqueries.json",
+        shell=True,
+        cwd=scrapy_project_path,
+    )
+    # crawling the last url of each task
+    subprocess.call(
+        "scrapy crawl task_urls -o final.json",
+        shell=True,
+        cwd=scrapy_project_path,
+    )
+    # moving the query file to the correct for the next step
+    subprocess.call(
+        "mv final.json ./../../final.json", shell=True, cwd=scrapy_project_path
+    )
+    # deleting the intermediate file allqueries
+    subprocess.call("rm allqueries.json", shell=True, cwd=scrapy_project_path)
+    # deleting duplicate on the query file
+    subprocess.call("python3 helpers.py", shell=True, cwd="./src/Taskrabbit/")
+    # merging the city and query file together
+    subprocess.call(
+        "python3 final_queries.py", shell=True, cwd="./src/Taskrabbit/"
+    )
+    # copying the final query file to the data folder
+    subprocess.call(
+        "cp final_queries.json ./../../data/taskrabbit/final_queries.json",
+        shell=True,
+        cwd="./src/Taskrabbit/",
+    )
+    # removing all of the json file left in src folder
+    subprocess.call("rm *.json", shell=True, cwd="./src/Taskrabbit/")
+    args.queriesfile = "./data/taskrabbit/final_queries.json"
+    return args.queriesfile
