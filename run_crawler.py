@@ -51,7 +51,7 @@ def main():
     failed = []
 
     counter = 1
-    for query in list_query[:2]:
+    for query in list_query:
         print("query " + str(counter))
         counter += 1
         crawler = Crawler(query, args.webdriver)
