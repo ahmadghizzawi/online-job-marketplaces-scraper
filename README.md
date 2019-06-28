@@ -1,12 +1,12 @@
 # Online Job Marketplaces Scraper
-This repository contains scripts that were used to crawl and scrape online job marketplaces such as TaskRabbit and Fiverr 
-for research purposes. The way scraping is conducted is similar across all platforms that we scraped; we define a set 
-queries where a query is a combination of parameters that yield a ranked list of users. For example, in TaskRabbit's 
+This repository contains scripts that were used to crawl and scrape online job marketplaces such as TaskRabbit and Fiverr
+for research purposes. The way scraping is conducted is similar across all platforms that we scraped; we define a set
+queries where a query is a combination of parameters that yield a ranked list of users. For example, in TaskRabbit's
 case that would be a combination of a location and service type, i.e. _Home Cleaners in New York_.
 
 ## Setup
 ### Requirements
-- Python 3.x: https://www.anaconda.com/distribution/ 
+- Python 3.x: https://www.anaconda.com/distribution/
 - ChromeDriver v < 73: https://chromedriver.storage.googleapis.com/index.html?path=2.46/
 
 ### Dependencies
@@ -25,7 +25,7 @@ Read more here: https://ljvmiranda921.github.io/notebook/2018/06/21/precommits-u
 
 ## TaskRabbit
 The TaskRabbit scraper was written in *June 2019*. Therefore, you might have to do some changes before scraping
-depending on how severe the changes are. 
+depending on how severe the changes are.
 
 ### Crawl TaskRabbit
 In order to run taskrabbit_crawler.py you need to execute the following command:
@@ -49,41 +49,44 @@ optional arguments:
 #### Example
 
 ```bash
-python taskrabbit_crawler.py -w ./chromedriver -q queries.json 
+python taskrabbit_crawler.py -w ./chromedriver -q queries.json
 ```
 
-would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the 
-data/taskrabbit folder. The output folder would be the default ouput folder which is 
+would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the
+data/taskrabbit folder. The output folder would be the default ouput folder which is
 dataset/taskrabbit.
 
 ## MisterTemp
 MisterTemp scraper was written in *June 2019*. Therefore, you might have to do some changes before scraping
-depending on how severe the changes are. 
+depending on how severe the changes are.
 
 ### Crawl MisterTemp
 In order to run mistertemp_crawler.py you need to execute the following command:
 
 ```bash
-mistertemp crawler
+usage: run_crawler.py [-h] -p  -w  [-q] [-o] [-t]
+
+parser
 
 optional arguments:
   -h, --help           show this help message and exit
+  -p , --platform      Platform to crawl
   -w , --webdriver     The PATH of the chromedriver
   -q , --queriesfile   The files containing the queries you wish to work with
-  -o , --output        The output directory containing the results, and pics 
-  -t , --workers       The number of threads you want to use
+  -o , --output        The output directory containing the results, pics and
+                       the failed queries
+  -t , --threads       The number of threads you want to use
 
 ```
 #### Example
 ```bash
-python mistertemp_crawler.py -w ./chromedriver -q queries.json -t 5
+python run_crawler.py -p mistertemp -w ./chromedriver -q data/mistertemp/queries.json
 ```
 
-would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the 
-data/mistertemp folder. It would also use 5 threads and the output folder would be the default ouput folder which is 
-dataset/mistertemp.
+would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the
+data/mistertemp folder.
 
-## Results 
+## Results
 ```
 └── datasets
     ├── mistertemp
@@ -95,6 +98,10 @@ dataset/mistertemp.
             ├── pics
             └── results    
 ```
+
+## Failed queries
+Failes queries are put in a json file : "failed_queries.json" which is located in the timestamp folder which contains the results ans pics folders.
+
 # Authors
 Ahmad Ghizzawi (ahg05@mail.aub.edu)
 
