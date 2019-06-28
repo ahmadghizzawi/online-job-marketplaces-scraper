@@ -10,6 +10,8 @@ import sys
 import asyncio
 import threading
 
+from mistertemp_crawler import MistertempCrawler
+from taskrabbit_crawler import TaskrabbitCrawler
 from datetime import datetime
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -83,3 +85,18 @@ def parse_arguments():
     if args.output is None:
         args.output = "./datasets/" + args.platform + "/"
     return args
+
+
+def get_url(platform, query):
+    def get_url_mistertemp(args):
+        return "https://www.mistertemp.com/espace-recruteur/"
+
+    def get_url_taskrabbit(args, query):
+        print("TO DO")
+
+
+def get_crawler(platform):
+    if platform == "mistertemp":
+        return MistertempCrawler
+    elif platform == "taskrabbit":
+        return TaskrabbitCrawler

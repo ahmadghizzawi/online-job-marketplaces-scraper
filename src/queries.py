@@ -20,13 +20,12 @@ from urllib.parse import urlparse
 def get_queries(args):
 
     if args.platform == "mistertemp":
-        get_queries_mistertemp(args)
+        return get_queries_mistertemp(args)
     elif args.platform == "taskrabbit":
-        get_queries_taskrabbit(args)
+        return get_queries_taskrabbit(args)
 
 
 def get_queries_mistertemp(args):
-
     print("No input file passed \nAutomatic crawl mistertemp.com")
     subprocess.call(
         "scrapy crawl cities -o cities.json",
