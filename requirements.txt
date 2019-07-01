@@ -5,3 +5,4 @@ scrapy
 pre-commit
 black
 flake8
+parmap
