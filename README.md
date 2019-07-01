@@ -24,7 +24,7 @@ Read more here: https://ljvmiranda921.github.io/notebook/2018/06/21/precommits-u
 ![alt text](https://ljvmiranda921.github.io/assets/png/tuts/precommit_pipeline.png)
 
 ## Platforms
-The table below lays out the supported platforms, the commandline argument name, and the last time data was crawled 
+The table below lays out the supported platforms, and the last time data was crawled 
 off that platform. You might have to do some changes to the code before scraping
 depending on whether any significant changes occurred to the website since the last
 crawl date.
