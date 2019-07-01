@@ -1,20 +1,9 @@
-import argparse
-import json
-import os
 import re
-import subprocess
 import time
-import urllib.request
-import concurrent.futures
-import sys
-
-
-from src.crawler import RankingItemEncoder, RankingItem, Query, OJMCrawler
-from datetime import datetime
-from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import ChromeOptions
 from slugify import slugify
+
+from src.crawler import RankingItem, OJMCrawler
 
 
 class TaskrabbitCrawler(OJMCrawler):
@@ -24,6 +13,7 @@ class TaskrabbitCrawler(OJMCrawler):
         else:
             print("cookie banner hidden")
 
+    # TODO: USE self.browser INSTEAD OF PASSING browser AS A PARAMETER
     def __assembly(self, boxes, browser):
         if len(boxes) == 5:
             print("found 5 boxes")

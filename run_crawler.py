@@ -1,7 +1,6 @@
 import json
 import urllib.request
 from slugify import slugify
-from multiprocessing.dummy import Pool as ThreadPool
 import parmap
 
 from src.helper import (
@@ -62,8 +61,8 @@ def main():
         Query(get_url(args.platform, entry), entry["title"], entry["city"])
         for entry in entries
     ]
-
     indexes = [i for i in range(len(list_query))]
+
     results = parmap.starmap(
         crawl_query, zip(list_query, indexes), args, results_path, pictures_path, pm_processes=args.threads)
 

@@ -1,19 +1,4 @@
-import argparse
-import json
-import os
 import subprocess
-import time
-import urllib.request
-import concurrent.futures
-import sys
-import asyncio
-import threading
-
-from datetime import datetime
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from slugify import slugify
-from urllib.parse import urlparse
 
 
 def get_queries(args):
