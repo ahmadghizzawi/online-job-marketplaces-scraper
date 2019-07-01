@@ -48,7 +48,11 @@ def get_queries_mistertemp(args):
         "python3 make_queries.py", shell=True, cwd="./mistertemp/mistertemp/"
     )
     subprocess.call(
-        "mv ./mistertemp/mistertemp/queries.json ./data/mistertemp/queries.json",
+        "python3 final_queries.py", shell=True, cwd="./mistertemp/mistertemp/"
+    )
+
+    subprocess.call(
+        "mv ./mistertemp/mistertemp/queries.json ./data/mistertemp/final_queries.json",
         shell=True,
         cwd="..",
     )
