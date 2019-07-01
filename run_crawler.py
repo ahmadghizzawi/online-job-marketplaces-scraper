@@ -5,7 +5,6 @@ import subprocess
 import time
 import urllib.request
 import concurrent.futures
-import psutil
 import sys
 import asyncio
 import threading
@@ -39,11 +38,7 @@ def main():
     res, pic, folder_path = create_output_folders(args.output)
 
     list_query = [
-        Query(
-            get_url(args.platform, args.queriesfile),
-            entry["title"],
-            entry["city"],
-        )
+        Query(get_url(args.platform, entry), entry["title"], entry["city"])
         for entry in entries
     ]
 
