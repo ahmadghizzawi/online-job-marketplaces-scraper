@@ -41,7 +41,7 @@ def main():
     list_query = [
         Query(
             get_url(args.platform, args.queriesfile),
-            entry["service"],
+            entry["title"],
             entry["city"],
         )
         for entry in entries
