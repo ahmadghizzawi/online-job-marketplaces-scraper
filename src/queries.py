@@ -107,13 +107,17 @@ def get_queries_taskrabbit(args):
     subprocess.call(
         "python3 final_queries.py", shell=True, cwd="./src/Taskrabbit/"
     )
+    # putting the queries in the Query format using the module crawler
+    subprocess.call(
+        "python3 format_queries.py", shell=True, cwd="./src/Taskrabbit/"
+    )
     # copying the final query file to the data folder
     subprocess.call(
-        "cp final_queries.json ./../../data/taskrabbit/final_queries.json",
+        "cp final_queries_format.json ./../../data/taskrabbit/final_queries_format.json",
         shell=True,
         cwd="./src/Taskrabbit/",
     )
     # removing all of the json file left in src folder
     subprocess.call("rm *.json", shell=True, cwd="./src/Taskrabbit/")
-    args.queriesfile = "./data/taskrabbit/final_queries.json"
+    args.queriesfile = "./data/taskrabbit/final_queries_format.json"
     return args.queriesfile

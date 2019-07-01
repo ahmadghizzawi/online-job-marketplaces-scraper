@@ -38,9 +38,7 @@ def main():
     res, pic, folder_path = create_output_folders(args.output)
 
     list_query = [
-        Query(
-            get_url(args.platform, entry), entry["task_title"], entry["city"]
-        )
+        Query(get_url(args.platform, entry), entry["title"], entry["city"])
         for entry in entries
     ]
 
