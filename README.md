@@ -23,70 +23,47 @@ pre-commit install
 Read more here: https://ljvmiranda921.github.io/notebook/2018/06/21/precommits-using-black-and-flake8/
 ![alt text](https://ljvmiranda921.github.io/assets/png/tuts/precommit_pipeline.png)
 
-## TaskRabbit
-The TaskRabbit scraper was written in *June 2019*. Therefore, you might have to do some changes before scraping
-depending on how severe the changes are.
+## Platforms
+The table below lays out the supported platforms, and the last time data was crawled 
+off that platform. You might have to do some changes to the code before scraping
+depending on whether any significant changes occurred to the website since the last
+crawl date.
 
-### Crawl TaskRabbit
-In order to run taskrabbit_crawler.py you need to execute the following command:
+|  Platform  | Last Crawled |
+|:----------:|:------------:|
+| TaskRabbit |  June, 2019  |
+| MisterTemp |  June, 2019  |
 
-```bash
-usage: taskrabbit_crawler.py [-h] -w  [-q] [-o] [-b] [-e]
-
-taskrabbit crawler
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -w , --web       The path to your chrome web driver
-  -q , --queries   The files containing the queries you wish to work with
-  -o , --output    The output directory containing the results, pics and the
-                   failed queries
-  -b , --beg       The beginning point of the query file
-  -e , --end       ending point of the query file
-
-```
-
-#### Example
-
-```bash
-python taskrabbit_crawler.py -w ./chromedriver -q queries.json
-```
-
-would grab the chromedriver placed in the online-job-marketplaces-scraper folder and use the queries placed in the
-data/taskrabbit folder. The output folder would be the default ouput folder which is
-dataset/taskrabbit.
-
-## MisterTemp
-MisterTemp scraper was written in *June 2019*. Therefore, you might have to do some changes before scraping
-depending on how severe the changes are.
-
-### Crawl MisterTemp
-In order to run mistertemp_crawler.py you need to execute the following command:
+### Crawl Platform
+In order to crawl a platform, you need to execute the following command:
 
 ```bash
 usage: run_crawler.py [-h] -p  -w  [-q] [-o] [-t]
-
-parser
-
+  -p , --platform      Platform to crawl. One of: [taskrabbit, mistertemp]
+  -w , --webdriver     The PATH of the chromedriver
 optional arguments:
   -h, --help           show this help message and exit
-  -p , --platform      Platform to crawl
-  -w , --webdriver     The PATH of the chromedriver
   -q , --queriesfile   The files containing the queries you wish to work with
-  -o , --output        The output directory containing the results, pics and
+  -o , --output        The output directory containing the results, pics, and 
                        the failed queries
-  -t , --threads       The number of threads you want to use
+  -t , --threads       The number of threads you want to use. Defaults to 1.
 
 ```
-#### Example
+
+#### MisterTemp Example 
 ```bash
 python run_crawler.py -p mistertemp -w ./chromedriver -q data/mistertemp/queries.json
 ```
 
-would grab the chromedriver placed in the main folder and use the queries placed in the
-data/mistertemp folder.
+#### TaskRabbit Example 
+```bash
+python run_crawler.py -p taskrabbit -w ./chromedriver -q data/taskrabbit/final-queries.json
+```
 
-## Results
+
+### Output
+The output of the crawling run will be under the folder `dataset/PLATFORM/TIMESTAMP` with two
+folders `pics` and `results`, and will have the following structure: 
 ```
 └── datasets
     ├── mistertemp
@@ -99,8 +76,9 @@ data/mistertemp folder.
             └── results    
 ```
 
-## Failed queries
-Failes queries are put in a json file : `failed_queries.json` which is located in the timestamp folder which contains the results ans pics folders.
+### Failed queries
+Failed queries are dumped in `failed_queries.json` inside the timestamped folder.
+
 
 # Authors
 Ahmad Ghizzawi (ahg05@mail.aub.edu)

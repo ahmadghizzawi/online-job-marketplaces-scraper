@@ -1,21 +1,9 @@
 import argparse
-import json
 import os
-import subprocess
-import time
-import urllib.request
-import concurrent.futures
-import sys
-import asyncio
-import threading
+from datetime import datetime
 
 from src.mistertemp_crawler import MistertempCrawler
 from src.taskrabbit_crawler import TaskrabbitCrawler
-from datetime import datetime
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from slugify import slugify
-from urllib.parse import urlparse
 
 
 def create_output_folders(output_path):
