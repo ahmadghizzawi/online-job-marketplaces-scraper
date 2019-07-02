@@ -10,37 +10,32 @@ def get_queries(args):
 
 
 def get_queries_mistertemp(args):
+    scrapy_project_path = "./src/mistertemp/mistertemp/"
     print("No input file passed \nAutomatic crawl mistertemp.com")
     subprocess.call(
         "scrapy crawl cities -o cities.json",
         shell=True,
-        cwd="./src/mistertemp/mistertemp/",
+        cwd=scrapy_project_path,
     )
     subprocess.call(
         "python3 get_services.py -w " + args.webdriver,
         shell=True,
-        cwd="./src/mistertemp/mistertemp/",
+        cwd=scrapy_project_path,
     )
 
     subprocess.call(
-        "python3 final_services.py",
-        shell=True,
-        cwd="./src/mistertemp/mistertemp/",
+        "python3 final_services.py", shell=True, cwd=scrapy_project_path
     )
     subprocess.call(
         "mv ./mistertemp/cities.json cities.json",
         shell=True,
-        cwd="./src/mistertemp/mistertemp/",
+        cwd=scrapy_project_path,
     )
     subprocess.call(
-        "python3 make_queries.py",
-        shell=True,
-        cwd="./src/mistertemp/mistertemp/",
+        "python3 make_queries.py", shell=True, cwd=scrapy_project_path
     )
     subprocess.call(
-        "python3 final_queries.py",
-        shell=True,
-        cwd="./src/mistertemp/mistertemp/",
+        "python3 final_queries.py", shell=True, cwd=scrapy_project_path
     )
 
     subprocess.call(
