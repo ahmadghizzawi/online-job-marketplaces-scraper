@@ -10,30 +10,32 @@ def get_queries(args):
 
 
 def get_queries_mistertemp(args):
+    scrapy_project_path = "./src/mistertemp/mistertemp/"
     print("No input file passed \nAutomatic crawl mistertemp.com")
     subprocess.call(
         "scrapy crawl cities -o cities.json",
         shell=True,
-        cwd="./mistertemp/mistertemp/",
+        cwd=scrapy_project_path,
     )
     subprocess.call(
         "python3 get_services.py -w " + args.webdriver,
         shell=True,
-        cwd="./mistertemp/mistertemp/",
+        cwd=scrapy_project_path,
     )
+
     subprocess.call(
-        "python3 final_services.py", shell=True, cwd="./mistertemp/mistertemp/"
+        "python3 final_services.py", shell=True, cwd=scrapy_project_path
     )
     subprocess.call(
         "mv ./mistertemp/cities.json cities.json",
         shell=True,
-        cwd="./mistertemp/mistertemp/",
+        cwd=scrapy_project_path,
     )
     subprocess.call(
-        "python3 make_queries.py", shell=True, cwd="./mistertemp/mistertemp/"
+        "python3 make_queries.py", shell=True, cwd=scrapy_project_path
     )
     subprocess.call(
-        "python3 final_queries.py", shell=True, cwd="./mistertemp/mistertemp/"
+        "python3 final_queries.py", shell=True, cwd=scrapy_project_path
     )
 
     subprocess.call(
@@ -41,8 +43,8 @@ def get_queries_mistertemp(args):
         shell=True,
         cwd="..",
     )
-    subprocess.call("rm *.json", shell=True, cwd="./mistertemp/mistertemp")
-    args.queriesfile = "/data/mistertemp/queries.json"
+    subprocess.call("rm *.json", shell=True, cwd="./src/mistertemp/mistertemp")
+    args.queriesfile = "./data/mistertemp/final_queries.json"
 
     return args.queriesfile
 
@@ -102,11 +104,11 @@ def get_queries_taskrabbit(args):
     )
     # copying the final query file to the data folder
     subprocess.call(
-        "cp final_queries_format.json ./../../data/taskrabbit/final_queries_format.json",
+        "cp final_queries.json ./../../data/taskrabbit/final_queries.json",
         shell=True,
         cwd="./src/Taskrabbit/",
     )
     # removing all of the json file left in src folder
     subprocess.call("rm *.json", shell=True, cwd="./src/Taskrabbit/")
-    args.queriesfile = "./data/taskrabbit/final_queries_format.json"
+    args.queriesfile = "./data/taskrabbit/final_queries.json"
     return args.queriesfile
