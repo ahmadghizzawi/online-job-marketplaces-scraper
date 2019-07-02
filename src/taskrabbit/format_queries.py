@@ -25,5 +25,5 @@ for query in queries:
         )
     )
 
-with open("final_queries2.json", "w") as nf:
+with open("final_queries.json", "w") as nf:
     json.dump(result, nf, cls=QueryEncoder)
