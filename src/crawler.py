@@ -118,4 +118,7 @@ class OJMCrawler(ABC):
         raise NotImplementedError
 
     def exit(self):
-        self.browser.close()
+        try:
+            self.browser.close()
+        except Exception:
+            print("browser already closed")
