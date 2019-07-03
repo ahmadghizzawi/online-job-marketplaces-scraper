@@ -1,22 +1,9 @@
 import argparse
-import json
 import os
-import subprocess
-import time
-import urllib.request
-import concurrent.futures
-import psutil
-import sys
-import asyncio
-import threading
+from datetime import datetime
 
 from src.mistertemp_crawler import MistertempCrawler
 from src.taskrabbit_crawler import TaskrabbitCrawler
-from datetime import datetime
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from slugify import slugify
-from urllib.parse import urlparse
 
 
 def create_output_folders(output_path):
@@ -94,7 +81,16 @@ def get_url(platform, query):
         return "https://www.mistertemp.com/espace-recruteur/"
 
     def get_url_taskrabbit(query):
-        print("TO DO")
+        if query["city"].endswith("UK"):
+            # UK cities, UK taskrabbit
+            website = "https://www.taskrabbit.co.uk"
+        elif query["city"] in ["Toronto, CA", "Vancouver, CA"]:
+            # Canada cities, Canadien taskrabbit
+            website = "https://www.taskrabbit.ca"
+        else:
+            # USA taskrabbit
+            website = "https://www.taskrabbit.com"
+        return website + query["url"]
 
     if platform == "mistertemp":
         return get_url_mistertemp()
