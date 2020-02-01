@@ -79,7 +79,7 @@ folders `pics` and `results`, and will have the following structure:
 ### Failed queries
 Failed queries are dumped in `failed_queries.json` inside the timestamped folder.
 
-### Crawling a new website
+## Crawling a new website
 To crawl a new website, you would need to implement the class (OJMCrawler)https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/crawler.py#L78-L124. Use the taskrabbit and mistertemp implementation as a guide.
 
 
