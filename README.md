@@ -80,7 +80,7 @@ folders `pics` and `results`, and will have the following structure:
 Failed queries are dumped in `failed_queries.json` inside the timestamped folder.
 
 ## Crawling a new platform
-To crawl a new platform, you would need to implement the abstract class (OJMCrawler)https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/crawler.py#L78-L124. You could use the (taskrabbit)[https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/taskrabbit_crawler.py] and (mistertemp)[https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/mistertemp_crawler.py] as examples to get you started.
+To crawl a new platform, you would need to implement the abstract class [OJMCrawler](https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/crawler.py#L78-L124). You could use the [taskrabbit](https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/taskrabbit_crawler.py) and [mistertemp](https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/mistertemp_crawler.py) as examples to get you started.
 
 
 # Authors
