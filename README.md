@@ -7,7 +7,7 @@ case that would be a combination of a location and service type, i.e. _Home Clea
 ## Setup
 ### Requirements
 - Python 3.x: https://www.anaconda.com/distribution/
-- ChromeDriver v < 73: https://chromedriver.storage.googleapis.com/index.html?path=2.46/
+- ChromeDriver v < 73: https://chromedriver.storage.googleapis.com/index.html?path=2.46/ (This must be placed in the project's root directory)
 
 ### Dependencies
 ```bash
