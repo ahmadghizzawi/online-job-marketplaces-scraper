@@ -14,7 +14,7 @@ case that would be a combination of a location and service type, i.e. _Home Clea
 pip install -r requirements.txt
 ```
 
-### Precommit Hooks
+### Precommit Hooks (Optional)
 ```bash
 pre-commit install
 ```
@@ -23,7 +23,7 @@ pre-commit install
 Read more here: https://ljvmiranda921.github.io/notebook/2018/06/21/precommits-using-black-and-flake8/
 ![alt text](https://ljvmiranda921.github.io/assets/png/tuts/precommit_pipeline.png)
 
-## Platforms
+## Supported Platforms
 The table below lays out the supported platforms, and the last time data was crawled 
 off that platform. You might have to do some changes to the code before scraping
 depending on whether any significant changes occurred to the website since the last
@@ -79,8 +79,8 @@ folders `pics` and `results`, and will have the following structure:
 ### Failed queries
 Failed queries are dumped in `failed_queries.json` inside the timestamped folder.
 
-## Crawling a new website
-To crawl a new website, you would need to implement the class (OJMCrawler)https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/crawler.py#L78-L124. You could use the (taskrabbit)[https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/taskrabbit_crawler.py] and (mistertemp)[https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/mistertemp_crawler.py] as examples to get you started.
+## Crawling a new platform
+To crawl a new platform, you would need to implement the abstract class (OJMCrawler)https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/crawler.py#L78-L124. You could use the (taskrabbit)[https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/taskrabbit_crawler.py] and (mistertemp)[https://github.com/ahmadghizzawi/online-job-marketplaces-scraper/blob/master/src/mistertemp_crawler.py] as examples to get you started.
 
 
 # Authors
